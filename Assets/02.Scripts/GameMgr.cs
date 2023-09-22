@@ -7,19 +7,33 @@ using UnityEngine.UI;
 public class GameMgr : MonoBehaviour
 {
     //플레이어 관련변수
-    public static int maxHp = 100;
-    public static int curHp;
-    public static int maxSp = 100;
-    public static int curSp;
+    public static float maxHp = 100;
+    public static float curHp;
+    public static float maxSp = 100;
+    public static float curSp;
+    public static float tempSp;
+    public static int curGold = 500;
+
+    public static int stage = 1;
 
     //보유 카드리스트
-    public static List<int> cardInBagList = new List<int>(new int[] {0, 1, 2, 3, 4});
+    public static List<int> cardInBagList = new List<int>(new int[] {0, 1, 2, 3, 4, 5, 6});
 
+    //게임의 모든 카드 정보 가져오기
     [SerializeField] CardSO cardSO = null;
     public static List<Card> cardBuffer = new List<Card>();
 
+    public static Image hpBar;
+    public static Image spBar;
     public static Text hpTxt;
     public static Text spTxt;
+    public static Text goldTxt;
+
+    //보유 아이템 리스트
+    public static List<int> itemList = new List<int>();
+    [SerializeField] ItemSO itemSO = null;
+    public static List<Item> itemBuffer = new List<Item>();
+    public static GameObject itemPref;
 
     public static GameMgr Instance;
     private void Awake()
@@ -31,29 +45,26 @@ public class GameMgr : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        itemPref = Resources.Load<GameObject>("Prefabs/Item");
+
+        SetUpCardBuffer();
+        SetUpItemBuffer();
+
+        curHp = maxHp;
+        curSp = maxSp;
+
+        cardInBagList.Add(0);
+        cardInBagList.Add(1);
+        itemList.Add(2);
+        itemList.Add(3);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        Application.targetFrameRate = 60; //실행 프레임 속도 60프레임으로 고정
-        QualitySettings.vSyncCount = 0; //모니터 주사율 고정
-
-        //GameObject hptext = GameObject.Find("HpTxt");
-        //hpTxt = hptext.GetComponent<Text>();
-        //GameObject sptext = GameObject.Find("SpTxt");
-        //spTxt = sptext.GetComponent<Text>();
-
-        SetUpCardBuffer();
-
-        cardInBagList.Add(5);
-        cardInBagList.Add(6);
-        //cardInBagList.Add(9);
-
-        curHp = maxHp;
-        curSp = maxSp;
-        RefreshHP();
-        RefreshSP();
+        //Application.targetFrameRate = 60; //실행 프레임 속도 60프레임으로 고정
+        //QualitySettings.vSyncCount = 0; //모니터 주사율 고정
     }
 
     // Update is called once per frame
@@ -68,20 +79,73 @@ public class GameMgr : MonoBehaviour
         {
             cardBuffer.Add(cardSO.cardList[i]);
         }
+    }
 
+    void SetUpItemBuffer()
+    {
+        for (int i = 0; i < itemSO.items.Length; i++)
+        {
+            itemBuffer.Add(itemSO.items[i]);
+        }
     }
 
     public static void RefreshHP()
     {
-        GameObject hptext = GameObject.Find("HpTxt");
-        hpTxt = hptext.GetComponent<Text>();
-        hpTxt.text = "HP " + curHp;
+        GameObject hpImg = GameObject.Find("PlayerHpBar");
+        hpBar = hpImg.GetComponent<Image>();
+        GameObject hpText = GameObject.Find("HpTxt");
+        hpTxt = hpText.GetComponent<Text>();
+
+        hpBar.fillAmount = curHp / maxHp;
+        hpTxt.text = "HP " + curHp + "/" + maxHp;
     }
 
     public static void RefreshSP()
     {
-        GameObject sptext = GameObject.Find("SpTxt");
-        spTxt = sptext.GetComponent<Text>();
-        spTxt.text = "SP " + curSp;
+        GameObject spImg = GameObject.Find("PlayerSpBar");
+        spBar = spImg.GetComponent<Image>();
+        GameObject spText = GameObject.Find("SpTxt");
+        spTxt = spText.GetComponent<Text>();
+
+        spBar.fillAmount = curSp / maxSp;
+        spTxt.text = "SP " + curSp + "/" + maxSp;
+    }
+
+    public static void RefreshGold()
+    {
+        GameObject goldText = GameObject.Find("GoldTxt");
+        goldTxt = goldText.GetComponent<Text>();
+        goldTxt.text = curGold.ToString();
+    }
+
+    public static void RefreshItems()
+    {
+        GameObject itemPanel = GameObject.Find("ItemPanel");
+        for(int i = 0; i < itemPanel.transform.childCount; i++)
+        {
+            Destroy(itemPanel.transform.GetChild(i).gameObject);
+        }
+        if (itemList.Count > 0)
+        {
+            for (int i = 0; i < itemList.Count; i++)
+            {
+                GameObject item = Instantiate(itemPref);
+                item.transform.SetParent(itemPanel.transform, false);
+                item.GetComponent<ItemNode>().itemNum = itemList[i];
+            }
+        }
+
+    }
+
+    public static void ResetGame()
+    {
+        stage = 1;
+        cardInBagList = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6});
+        itemList.Clear();
+        maxHp = 100;
+        maxSp = 100;
+        curHp = maxHp;
+        curSp = maxSp;
+        curGold = 0;
     }
 }

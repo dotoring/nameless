@@ -36,23 +36,39 @@ public class FieldMgr : MonoBehaviour
 
     }
 
-    public bool ObjOnTile(int posX, int posY, GameObject obj)
+    public void ObjOnTile(int posX, int posY, GameObject obj)   //플레이어,몬스터가 움직였을 떄 해당 칸에 지정해주는 함수
     {
         TileMgr tile = field[posX, posY].GetComponent<TileMgr>();
-        if(obj.tag == "Player")
+        if(obj != null)
         {
-            tile.playerObj = obj;
+            if (obj.tag == "Player")    //obj가 플레이어라면 playerObj에 플레이어 넣기
+            {
+                tile.playerObj = obj;
+            }
+            else if (obj.tag == "Monster")   //obj가 몬스터라면 monsterObj에 몬스터 넣기
+            {
+                tile.monsterObj = obj;
+            }
         }
-        else if(obj.tag == "Monster")
-        {
-            tile.monsterObj = obj;
-        }
+    }
 
-        if(tile.playerObj != null && tile.monsterObj != null)
+    public bool IsPlayerOnTile(int posX, int posY)  //해당 타일에 플레이어 존재 여부 확인 함수
+    {
+        TileMgr tile = field[posX, posY].GetComponent<TileMgr>();
+        if (tile.playerObj != null)
         {
             return true;
         }
+        return false;
+    }
 
+    public bool IsMonOnTile(int posX, int posY)     //해당 타일에 몬스터 존재 여부 확인 함수
+    {
+        TileMgr tile = field[posX, posY].GetComponent<TileMgr>();
+        if (tile.monsterObj != null)
+        {
+            return true;
+        }
         return false;
     }
 

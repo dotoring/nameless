@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
+public enum CharAction
+{
+    attack,
+    move,
+    util,
+}
+
 public class PlayerCtrl : MonoBehaviour
 {
     FieldMgr fieldMgr = null;
@@ -68,13 +75,14 @@ public class PlayerCtrl : MonoBehaviour
         {
             playerPosY = FieldMgr.fieldHeight - 1;
         }
-        bool isEnemyOnTile = fieldMgr.ObjOnTile(playerPosX, playerPosY, gameObject);
-        if (isEnemyOnTile)
+        fieldMgr.ObjOnTile(playerPosX, playerPosY, gameObject); //이동할 위치에 플레이어 정보넣기
+        bool isEnemyOnTile = fieldMgr.IsMonOnTile(playerPosX, playerPosY);  //이동할 위치에 몬스터 존재 여부 확인
+        if (isEnemyOnTile)  //적이 있다면 같이 있을 수 있게 위치 조정해주기
         {
             transform.position = fieldMgr.field[playerPosX, playerPosY].transform.position;
             transform.Translate(-0.5f, 0, 0);
         }
-        else
+        else //적이 없다면 이동할 위치로 옮겨주기
         {
             transform.position = fieldMgr.field[playerPosX, playerPosY].transform.position;
         }
@@ -86,13 +94,38 @@ public class PlayerCtrl : MonoBehaviour
         tile.transform.Find("AttArea").gameObject.SetActive(b);
     }
 
-    public void Attack(int x, int y, int dmg)
+    public void PlayerAttack(int x, int y, int dmg)
     {
         TileMgr tile = fieldMgr.field[playerPosX + x, playerPosY + y].GetComponent<TileMgr>();
 
         if (tile.monsterObj != null)
         {
-            tile.monsterObj.GetComponent<MonsterCtrl>().Damage(dmg);
+            tile.monsterObj.GetComponent<MonsterCtrl>().MonDamage(dmg);
         }
+    }
+
+    public void UtilAreaOnOff(bool b)
+    {
+        TileMgr tile = fieldMgr.field[playerPosX, playerPosY].GetComponent<TileMgr>();
+        tile.transform.Find("UtilArea").gameObject.SetActive(b);
+    }
+
+    public void PlayerDamage(int dmg)
+    {
+        GameMgr.curHp -= dmg;
+        GameMgr.RefreshHP();
+        if (GameMgr.curHp <= 0)
+        {
+            BattleMgr.phase = Phase.gameOver;
+            Debug.Log("game over");
+        }
+    }
+
+    public Coords GetPlayerCoords()
+    {
+        Coords playerCoords = new Coords();
+        playerCoords.x = playerPosX;
+        playerCoords.y = playerPosY;
+        return playerCoords;
     }
 }

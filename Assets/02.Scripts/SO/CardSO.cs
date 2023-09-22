@@ -13,7 +13,7 @@ public class Card
     public Coords[] coords;
     public CardType cardType;
     public Sprite cardImage;
-
+    public int cardCost;
     
 }
 
