@@ -90,17 +90,27 @@ public class PlayerCtrl : MonoBehaviour
 
     public void AttackAreaOnOff(int x, int y, bool b)
     {
-        TileMgr tile = fieldMgr.field[playerPosX + x, playerPosY + y].GetComponent<TileMgr>();
-        tile.transform.Find("AttArea").gameObject.SetActive(b);
+        if (playerPosX + x < FieldMgr.fieldWidth && playerPosX + x >= 0 &&
+            playerPosY + y < FieldMgr.fieldHeight && playerPosY + y >= 0)
+        {
+            TileMgr tile = fieldMgr.field[playerPosX + x, playerPosY + y].GetComponent<TileMgr>();
+            if (tile != null)
+            {
+                tile.transform.Find("AttArea").gameObject.SetActive(b);
+            }
+        }
     }
 
     public void PlayerAttack(int x, int y, int dmg)
     {
-        TileMgr tile = fieldMgr.field[playerPosX + x, playerPosY + y].GetComponent<TileMgr>();
-
-        if (tile.monsterObj != null)
+        if (playerPosX + x < FieldMgr.fieldWidth && playerPosX + x >= 0 &&
+            playerPosY + y < FieldMgr.fieldHeight && playerPosY + y >= 0)
         {
-            tile.monsterObj.GetComponent<MonsterCtrl>().MonDamage(dmg);
+            TileMgr tile = fieldMgr.field[playerPosX + x, playerPosY + y].GetComponent<TileMgr>();
+            if (tile != null && tile.monsterObj != null)
+            {
+                tile.monsterObj.GetComponent<MonsterCtrl>().MonDamage(dmg);
+            }
         }
     }
 

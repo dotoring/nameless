@@ -98,8 +98,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bebd8b0ca7b8a34993fd1563d4ea761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  monsterSO: {fileID: 11400000, guid: d03db07db9e5465429172c34110c460b, type: 2}
+  mType: 0
   monHP: 0
   monHPText: {fileID: 2144484447097486378}
+  monImg: {fileID: 0}
   monPosX: 0
   monPosY: 0
 --- !u!1 &2144484447097486380

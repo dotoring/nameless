@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
 using UnityEditor.SceneManagement;
@@ -61,6 +62,9 @@ public class BattleMgr : MonoBehaviour
     public List<GameObject> monsters = new List<GameObject>();
     int totalMonsterCount;
 
+    List<MonsterCtrl> monCtrls = new List<MonsterCtrl>();
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -81,6 +85,12 @@ public class BattleMgr : MonoBehaviour
             monCtrl.monPosY = i * 2 + 1;
             monsters.Add(mon);
         }
+        //GameObject mon = Instantiate(monsterPrefab);
+        //MonsterCtrl monCtrl = mon.GetComponent<MonsterCtrl>();
+        //monCtrl.monPosX = 5;
+        //monCtrl.monPosY = 2;
+        //monCtrl.mType = MonsterType.ranger;
+        //monsters.Add(mon);
 
         phase = Phase.cardSelect;   //페이즈 설정
 
@@ -208,29 +218,88 @@ public class BattleMgr : MonoBehaviour
     {
         for (int i = 0; i < selectedCardList.Count; i++)
         {
-            //선택된 카드오브젝트들 하나씩 지우기
-            Transform[] childList = selectedCardArea.GetComponentsInChildren<Transform>();
-            Destroy(childList[1].gameObject);
 
+            //선택된 카드의 카드매니져 가져오기
             CardMgr cardMgr = selectedCardList[i].GetComponent<CardMgr>();
-            //-----------------플레이어 행동---------------------
-                //--------이동카드일 경우
-            if (selectedCardList[i].tag == "MoveCard")  
+
+            //몬스터 행동 결정해주기
+            if(monsters.Count > 0)
             {
+                for(int monster = 0;  monster < monsters.Count; monster++)
+                {
+                    MonsterCtrl monCtrl = monsters[monster].GetComponent<MonsterCtrl>();
+                    monCtrl.MonActionSelect();  //플레이어의 위치에 따라 행동 결정
+                    monCtrls.Add(monCtrl);    //몬스터 컨트롤 재활용을 위한 배열
+                }
+            }
+
+            //=====================1.이동 || 유틸=====================
+            //----------플레이어
+            if (selectedCardList[i].tag == "MoveCard")
+            {
+                //선택된 카드오브젝트들 하나씩 지우기
+                Transform[] childList = selectedCardArea.GetComponentsInChildren<Transform>();
+                Destroy(childList[1].gameObject);
+
                 playerCtrl.MoveAreaOnOff(cardMgr.cardCoords[0].x, cardMgr.cardCoords[0].y, true);   //이동 위치 표시
                 yield return new WaitForSeconds(1.0f);  //이동표시 후 1초 쉬기
                 playerCtrl.MoveAreaOnOff(cardMgr.cardCoords[0].x, cardMgr.cardCoords[0].y, false);  //이동 위치 표시 끄기
                 playerCtrl.Move(cardMgr.cardCoords[0].x, cardMgr.cardCoords[0].y);  //위치로 이동
-                for (int k = 0; k < monsters.Count; k++)
+                for (int j = 0; j < monCtrls.Count; j++)
                 {
-                    MonsterCtrl monCtrl = monsters[k].GetComponent<MonsterCtrl>();
-                    monCtrl.Move(0, 0); //위치 재조정을 위해
+                    monCtrls[j].Move(0, 0);
+                }
+                yield return new WaitForSeconds(1.0f);  //플레이어 행동 후 1초 쉬기
+            }
+            else if (selectedCardList[i].tag == "UtilCard")
+            {
+                //선택된 카드오브젝트들 하나씩 지우기
+                Transform[] childList = selectedCardArea.GetComponentsInChildren<Transform>();
+                Destroy(childList[1].gameObject);
+
+                playerCtrl.UtilAreaOnOff(true);
+                yield return new WaitForSeconds(1.0f);  //공격표시 후 1초 쉬기
+                playerCtrl.UtilAreaOnOff(false);
+                //GameMgr.curSp += cardMgr.cardSP;
+                yield return new WaitForSeconds(1.0f);  //플레이어 행동 후 1초 쉬기
+
+            }
+
+            //----------몬스터
+            if (monsters.Count > 0) //몬스터가 있다면
+            {
+                for (int j = 0; j < monCtrls.Count; j++)    //모든 몬스터 순서대로
+                {
+                    //몬스터 행동이 이동이라면
+                    if(monCtrls[j].monsterAction == CharAction.move)
+                    {
+                        monCtrls[j].monMoveAI();
+                        monCtrls[j].MonsterActionArea();
+                        yield return new WaitForSeconds(1.0f);  //몬스터 행동 표시 후 1초 쉬기
+                        monCtrls[j].MonsterAction();
+                        playerCtrl.Move(0, 0);  //위치 재조정을 위해
+                        yield return new WaitForSeconds(1.0f);  //몬스터 행동 후 1초 쉬기
+                    }
+                    //몬스터 행동이 유틸이라면
+                    else if (monCtrls[j].monsterAction == CharAction.util)
+                    {
+                        monCtrls[j].MonsterActionArea();
+                        yield return new WaitForSeconds(1.0f);  //몬스터 행동 표시 후 1초 쉬기
+                        monCtrls[j].MonsterAction();
+                        yield return new WaitForSeconds(1.0f);  //몬스터 행동 후 1초 쉬기
+                    }
                 }
             }
-                //--------공격카드일 경우
-            else if (selectedCardList[i].tag == "AttCard")  
+
+            //=====================3.공격=====================
+            //----------플레이어
+            if (selectedCardList[i].tag == "AttCard")
             {
-                for(int j = 0; j < cardMgr.cardCoords.Count; j++)   //모든 공격 위치 1초간 표시
+                //선택된 카드오브젝트들 하나씩 지우기
+                Transform[] childList = selectedCardArea.GetComponentsInChildren<Transform>();
+                Destroy(childList[1].gameObject);
+
+                for (int j = 0; j < cardMgr.cardCoords.Count; j++)   //모든 공격 위치 1초간 표시
                 {
                     playerCtrl.AttackAreaOnOff(cardMgr.cardCoords[j].x, cardMgr.cardCoords[j].y, true);
                 }
@@ -242,43 +311,36 @@ public class BattleMgr : MonoBehaviour
                     playerCtrl.PlayerAttack(cardMgr.cardCoords[j].x, cardMgr.cardCoords[j].y, cardMgr.cardDmg);
                     playerCtrl.AttackAreaOnOff(cardMgr.cardCoords[j].x, cardMgr.cardCoords[j].y, false);
                 }
-            }
-                //----------유틸카드일 경우
-            else if (selectedCardList[i].tag == "UtilCard") 
-            {
-                playerCtrl.UtilAreaOnOff(true);
-                yield return new WaitForSeconds(1.0f);  //공격표시 후 1초 쉬기
-                playerCtrl.UtilAreaOnOff(false);
-                //GameMgr.curSp += cardMgr.cardSP;
+                yield return new WaitForSeconds(1.0f);  //플레이어 행동 후 1초 쉬기
             }
 
-            yield return new WaitForSeconds(1.0f);  //플레이어 행동 후 1초 쉬기
-
-            //--------------------몬스터 행동-----------------------
-            if(monsters.Count > 0)
+            //----------몬스터
+            if (monsters.Count > 0) //몬스터가 있다면
             {
-                for (int k = 0; k < monsters.Count; k++)
+                for (int j = 0; j < monCtrls.Count; j++)    //모든 몬스터 순서대로
                 {
-                    MonsterCtrl monCtrl = monsters[k].GetComponent<MonsterCtrl>();
-                    monCtrl.MonsterActionArea();
-                    yield return new WaitForSeconds(1.0f);  //몬스터 행동 표시 후 1초 쉬기
-                    monCtrl.MonsterAction();
-                }
-                playerCtrl.Move(0, 0);  //위치 재조정을 위해
-
-                if (i != selectedCardList.Count - 1) //마지막 턴 제외
-                {
-                    yield return new WaitForSeconds(1.0f);  //몬스터 행동 후 1초 쉬기
+                    //몬스터 행동이 이동이라면
+                    if (monCtrls[j].monsterAction == CharAction.attack)
+                    {
+                        monCtrls[j].MonsterActionArea();
+                        yield return new WaitForSeconds(1.0f);  //몬스터 행동 표시 후 1초 쉬기
+                        monCtrls[j].MonsterAction();
+                        yield return new WaitForSeconds(1.0f);  //몬스터 행동 후 1초 쉬기
+                    }
                 }
             }
-            else //몬스터가 전부 죽었을 때
+
+            //=====================4.스테이지 판정=====================
+            if(monsters.Count <= 0) //몬스터가 전멸했을 경우
             {
-                if(GameMgr.stage == 8)
+                if (GameMgr.stage == 8) //마지막 스테이지라면 엔딩씬으로 이동
                 {
                     SceneManager.LoadScene("EndingScene");
                 }
-                phase = Phase.battleEndNewCard;
-                //선택된 카드들 전부 지워주기
+
+                phase = Phase.battleEndNewCard; //전투 결과 페이즈로 넘어가기
+
+                //-------선택된 카드들 전부 지워주기
                 Transform[] child = selectedCardArea.GetComponentsInChildren<Transform>();
                 for (int l = 1; l < child.Length; l++)
                 {
@@ -286,17 +348,20 @@ public class BattleMgr : MonoBehaviour
                 }
                 selectedCardList.Clear();
                 ClearSelectedCard();
-                yield break;
+                yield break;    //코루틴 종료
             }
-            //플레이어가 사망했을 때
-            if (phase == Phase.gameOver)
+            
+            if (phase == Phase.gameOver) //플레이어가 사망했을 경우
             {
-                yield break;
+                yield break;    //코루틴 종료
             }
+
+            monCtrls.Clear(); //몬스터 컨트롤리스트 초기화
         }
+        //------선택된 카드들 초기화해주기
         selectedCardList.Clear();
         ClearSelectedCard();
-        phase = Phase.cardSelect;
+        phase = Phase.cardSelect;   //카드 선택 페이즈로 넘어가기
     }
 
     void continueBtnClick() //계속 버튼 클릭 시

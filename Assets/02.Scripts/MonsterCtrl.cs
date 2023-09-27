@@ -1,11 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum MonsterType
+{
+    melee,
+    ranger,
+    bomber,
+    boss
+}
+
 public class MonsterCtrl : MonoBehaviour
 {
+    [SerializeField] MonsterSO monsterSO = null;
+    public MonsterType mType;
     public int monHP;
     public Text monHPText;
 
@@ -15,11 +26,12 @@ public class MonsterCtrl : MonoBehaviour
     int moveToX;
     int moveToY;
 
-    bool canMonsterAttack = false;
-    bool monsterUtil = false;
+    public CharAction monsterAction;
 
     //-------몬스터 이동 변수----------
     Queue<Node> queue = new Queue<Node>(); //BFS알고리즘에서 사용할 큐
+    bool[,] visit = new bool[7, 5]; //탐색 한곳 체크 변수
+
 
     //플레이어 위치 변수
     Coords playerCoords;
@@ -35,9 +47,11 @@ public class MonsterCtrl : MonoBehaviour
         GameObject playerObj = GameObject.FindWithTag("Player");
         playerCtrl = playerObj.GetComponent<PlayerCtrl>();
 
+        monsterAction = CharAction.util;
+
         playerCoords = playerCtrl.GetPlayerCoords();
 
-        monHP = 15;
+        SetMonster();
         RefreshMonHP();
 
         if (fieldObj != null )   //몬스터 첫 위치 지정
@@ -55,22 +69,38 @@ public class MonsterCtrl : MonoBehaviour
     {
         
     }
+    
+    void SetMonster()
+    {
+        Monster temp = monsterSO.monsters[1];
+
+        monHP = temp.hp;
+        monHPText.text = monHP.ToString();
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        sprite.sprite = temp.monsterImg;
+    }
 
     public void MonsterActionArea() //몬스터 액션 칸 표시 함수
     {
-        playerCoords = playerCtrl.GetPlayerCoords();
-
-        MonActionAI();
-
-        if(canMonsterAttack == true)
+        if(monsterAction == CharAction.attack)
         {
-            AreaOnOff(playerCoords.x, playerCoords.y, CharAction.attack, true);
+            if(mType == MonsterType.melee)
+            {
+                AreaOnOff(playerCoords.x, playerCoords.y, CharAction.attack, true);
+            }
+            else if(mType == MonsterType.ranger)
+            {
+                AreaOnOff(monPosX-1, monPosY, CharAction.attack, true);
+                AreaOnOff(monPosX-2, monPosY, CharAction.attack, true);
+                AreaOnOff(monPosX-3, monPosY, CharAction.attack, true);
+                AreaOnOff(monPosX-4, monPosY, CharAction.attack, true);
+            }
         }
-        else if(monsterUtil == true)
+        else if(monsterAction == CharAction.util)
         {
             AreaOnOff(monPosX, monPosY, CharAction.util, true);
         }
-        else
+        else if(monsterAction == CharAction.move)
         {
             AreaOnOff(moveToX, moveToY, CharAction.move, true);
         }
@@ -78,16 +108,30 @@ public class MonsterCtrl : MonoBehaviour
 
     public void MonsterAction() //몬스터 액션 수행 함수
     {
-        if (canMonsterAttack == true)
+        if (monsterAction == CharAction.attack)
         {
-            AreaOnOff(playerCoords.x, playerCoords.y, CharAction.attack, false);
-            MonAttack(playerCoords.x, playerCoords.y, 20);
+            if (mType == MonsterType.melee)
+            {
+                AreaOnOff(playerCoords.x, playerCoords.y, CharAction.attack, false);
+                MonAttack(playerCoords.x, playerCoords.y, 20);
+            }
+            else if (mType == MonsterType.ranger)
+            {
+                AreaOnOff(monPosX - 1, monPosY, CharAction.attack, false);
+                AreaOnOff(monPosX - 2, monPosY, CharAction.attack, false);
+                AreaOnOff(monPosX - 3, monPosY, CharAction.attack, false);
+                AreaOnOff(monPosX - 4, monPosY, CharAction.attack, false);
+                MonAttack(monPosX-1, monPosY, 10);
+                MonAttack(monPosX-2, monPosY, 10);
+                MonAttack(monPosX-3, monPosY, 10);
+                MonAttack(monPosX-4, monPosY, 10);
+            }
         }
-        else if(monsterUtil == true)
+        else if(monsterAction == CharAction.util)
         {
             AreaOnOff(monPosX, monPosY, CharAction.util, false);
         }
-        else
+        else if (monsterAction == CharAction.move)
         {
             AreaOnOff(moveToX, moveToY, CharAction.move, false);
             Move(moveToX, moveToY);
@@ -103,8 +147,12 @@ public class MonsterCtrl : MonoBehaviour
         }
         else if(action == CharAction.attack) //공격일떄
         {
-            TileMgr tile = fieldMgr.field[x, y].GetComponent<TileMgr>();
-            tile.transform.Find("AttArea").gameObject.SetActive(b);
+            if(x < FieldMgr.fieldWidth && x >= 0 &&
+               y < FieldMgr.fieldHeight && y >= 0)
+            {
+                TileMgr tile = fieldMgr.field[x, y].GetComponent<TileMgr>();
+                tile.transform.Find("AttArea").gameObject.SetActive(b);
+            }
         }
         else //유틸일때
         {
@@ -135,11 +183,15 @@ public class MonsterCtrl : MonoBehaviour
 
     public void MonAttack(int x, int y, int dmg)    //몬스터 공격함수
     {
-        TileMgr tile = fieldMgr.field[x, y].GetComponent<TileMgr>();
-
-        if (tile.playerObj != null)
+        if (x < FieldMgr.fieldWidth && x >= 0 &&
+            y < FieldMgr.fieldHeight && y >= 0)
         {
-            playerCtrl.PlayerDamage(dmg);
+            TileMgr tile = fieldMgr.field[x, y].GetComponent<TileMgr>();
+
+            if (tile.playerObj != null)
+            {
+                playerCtrl.PlayerDamage(dmg);
+            }
         }
     }
 
@@ -161,33 +213,75 @@ public class MonsterCtrl : MonoBehaviour
         monHPText.text = monHP.ToString();
     }
 
-    void MonActionAI()  //몬스터 동작 AI
+    public void MonActionSelect()  //몬스터 동작 AI
     {
-        monsterUtil = false;
-        if(canMonsterAttack)
-        {
-            canMonsterAttack = false;
-            monsterUtil = true;
-            return;
-        }
+        playerCoords = playerCtrl.GetPlayerCoords();    //플레이어 위치 가져오기
 
-        //----플레이어가 앞에 있으면 공격
-        if (Mathf.Abs(monPosX - playerCoords.x) + Mathf.Abs(monPosY - playerCoords.y) <= 1)
+        if(monsterAction == CharAction.attack)  //몬스터의 전 행동이 공격이였다면
         {
-            canMonsterAttack = true;
+            monsterAction = CharAction.util;    //유틸 상태 만들어주기
         }
-        //----아니면 플레이어를 향해 이동
-        else
+        else //전 행동이 공격이 아니였다면
         {
-            //BFS 길찾기 알고리즘을 이용
+            if (mType == MonsterType.melee)  //근접 몬스터의 경우
+            {
+                //----플레이어가 공격 범위에 있으면 공격
+                //근접 몬스터의 공격 범위
+                if (Mathf.Abs(monPosX - playerCoords.x) + Mathf.Abs(monPosY - playerCoords.y) <= 1)
+                {
+                    monsterAction = CharAction.attack;
+                }
+                //----아니면 이동
+                else
+                {
+                    monsterAction = CharAction.move;
+                }
+            }
+            else if (mType == MonsterType.ranger)
+            {
+                //----플레이어가 공격 범위에 있으면 공격
+                //원거리 몬스터의 공격 범위
+                if (monPosY == playerCoords.y)
+                {
+                    monsterAction = CharAction.attack;
+                }
+                //----아니면 이동
+                else
+                {
+                    monsterAction = CharAction.move;
+                }
+            }
+        }
+    }
+
+    public void monMoveAI()
+    {
+        if (mType == MonsterType.melee) //근접 몬스터의 경우
+        {
+            //BFS 길찾기 알고리즘을 이용해 플레이어를 향해 이동
             Node monsterPos = new Node(monPosX, monPosY, null, 0);
             BFS(monsterPos);
+        }
+        else if(mType == MonsterType.ranger)    //원거리 몬스터의 경우
+        {
+            if (monPosY <= playerCoords.y)
+            {
+                //if(fieldMgr.IsMonOnTile(monPosX, monPosY +1))   //
+                //{
+                //    monPosY - 
+                //}
+                monPosY += 1;
+            }
+            else if (monPosY >= playerCoords.y)
+            {
+                monPosY -= 1;
+            }
         }
     }
 
     void BFS(Node s)    //너비우선탐색(Breadth-First Search) 알고리즘
     {
-        bool[,] visit = new bool[7, 5]; //탐색 한곳 체크 변수
+        visit = new bool[7, 5];
 
         //상하우좌 차례로 확인해줄 변수
         int[] dx = { 0, 0, 1, -1 };
@@ -224,22 +318,22 @@ public class MonsterCtrl : MonoBehaviour
             }
         }
 
-        bool IsPath(int x, int y) //이동 가능한 길인지 체크 함수
-        {
-            if (x < 0 || x > FieldMgr.fieldWidth - 1 || y < 0 || y > FieldMgr.fieldHeight - 1)  //맵 밖일 때
-            {
-                return false;
-            }
 
-            if (visit[x, y] || fieldMgr.IsMonOnTile(x, y))  //탐색한 곳이거나 몬스터가 있는 곳일 때
-            {
-                return false;
-            }
-
-            return true;
-        }
     }
+    public bool IsPath(int x, int y) //이동 가능한 길인지 체크 함수
+    {
+        if (x < 0 || x > FieldMgr.fieldWidth - 1 || y < 0 || y > FieldMgr.fieldHeight - 1)  //맵 밖일 때
+        {
+            return false;
+        }
 
+        if (visit[x, y] || fieldMgr.IsMonOnTile(x, y))  //탐색한 곳이거나 몬스터가 있는 곳일 때
+        {
+            return false;
+        }
+
+        return true;
+    }
 
 
     class Node
