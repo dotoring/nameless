@@ -62,8 +62,6 @@ public class BattleMgr : MonoBehaviour
     public List<GameObject> monsters = new List<GameObject>();
     int totalMonsterCount;
 
-    List<MonsterCtrl> monCtrls = new List<MonsterCtrl>();
-
 
     // Start is called before the first frame update
     void Start()
@@ -229,7 +227,6 @@ public class BattleMgr : MonoBehaviour
                 {
                     MonsterCtrl monCtrl = monsters[monster].GetComponent<MonsterCtrl>();
                     monCtrl.MonActionSelect();  //플레이어의 위치에 따라 행동 결정
-                    monCtrls.Add(monCtrl);    //몬스터 컨트롤 재활용을 위한 배열
                 }
             }
 
@@ -245,9 +242,10 @@ public class BattleMgr : MonoBehaviour
                 yield return new WaitForSeconds(1.0f);  //이동표시 후 1초 쉬기
                 playerCtrl.MoveAreaOnOff(cardMgr.cardCoords[0].x, cardMgr.cardCoords[0].y, false);  //이동 위치 표시 끄기
                 playerCtrl.Move(cardMgr.cardCoords[0].x, cardMgr.cardCoords[0].y);  //위치로 이동
-                for (int j = 0; j < monCtrls.Count; j++)
+                for (int j = 0; j < monsters.Count; j++)
                 {
-                    monCtrls[j].Move(0, 0);
+                    MonsterCtrl monCtrl = monsters[j].GetComponent<MonsterCtrl>();
+                    monCtrl.Move(0, 0);
                 }
                 yield return new WaitForSeconds(1.0f);  //플레이어 행동 후 1초 쉬기
             }
@@ -268,24 +266,25 @@ public class BattleMgr : MonoBehaviour
             //----------몬스터
             if (monsters.Count > 0) //몬스터가 있다면
             {
-                for (int j = 0; j < monCtrls.Count; j++)    //모든 몬스터 순서대로
+                for (int j = 0; j < monsters.Count; j++)    //모든 몬스터 순서대로
                 {
+                    MonsterCtrl monCtrl = monsters[j].GetComponent<MonsterCtrl>();
                     //몬스터 행동이 이동이라면
-                    if(monCtrls[j].monsterAction == CharAction.move)
+                    if (monCtrl.monsterAction == CharAction.move)
                     {
-                        monCtrls[j].monMoveAI();
-                        monCtrls[j].MonsterActionArea();
+                        monCtrl.monMoveAI();
+                        monCtrl.MonsterActionArea();
                         yield return new WaitForSeconds(1.0f);  //몬스터 행동 표시 후 1초 쉬기
-                        monCtrls[j].MonsterAction();
+                        monCtrl.MonsterAction();
                         playerCtrl.Move(0, 0);  //위치 재조정을 위해
                         yield return new WaitForSeconds(1.0f);  //몬스터 행동 후 1초 쉬기
                     }
                     //몬스터 행동이 유틸이라면
-                    else if (monCtrls[j].monsterAction == CharAction.util)
+                    else if (monCtrl.monsterAction == CharAction.util)
                     {
-                        monCtrls[j].MonsterActionArea();
+                        monCtrl.MonsterActionArea();
                         yield return new WaitForSeconds(1.0f);  //몬스터 행동 표시 후 1초 쉬기
-                        monCtrls[j].MonsterAction();
+                        monCtrl.MonsterAction();
                         yield return new WaitForSeconds(1.0f);  //몬스터 행동 후 1초 쉬기
                     }
                 }
@@ -317,14 +316,15 @@ public class BattleMgr : MonoBehaviour
             //----------몬스터
             if (monsters.Count > 0) //몬스터가 있다면
             {
-                for (int j = 0; j < monCtrls.Count; j++)    //모든 몬스터 순서대로
+                for (int j = 0; j < monsters.Count; j++)    //모든 몬스터 순서대로
                 {
+                    MonsterCtrl monCtrl = monsters[j].GetComponent<MonsterCtrl>();
                     //몬스터 행동이 이동이라면
-                    if (monCtrls[j].monsterAction == CharAction.attack)
+                    if (monCtrl.monsterAction == CharAction.attack)
                     {
-                        monCtrls[j].MonsterActionArea();
+                        monCtrl.MonsterActionArea();
                         yield return new WaitForSeconds(1.0f);  //몬스터 행동 표시 후 1초 쉬기
-                        monCtrls[j].MonsterAction();
+                        monCtrl.MonsterAction();
                         yield return new WaitForSeconds(1.0f);  //몬스터 행동 후 1초 쉬기
                     }
                 }
@@ -355,8 +355,6 @@ public class BattleMgr : MonoBehaviour
             {
                 yield break;    //코루틴 종료
             }
-
-            monCtrls.Clear(); //몬스터 컨트롤리스트 초기화
         }
         //------선택된 카드들 초기화해주기
         selectedCardList.Clear();
