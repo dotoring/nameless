@@ -15,18 +15,20 @@ public enum MonsterType
 
 public class MonsterCtrl : MonoBehaviour
 {
-    [SerializeField] MonsterSO monsterSO = null;
     public MonsterType mType;
+    public string name;
+    public int maxMonHp;
     public int monHP;
     public Text monHPText;
 
-    public int monPosX;
-    public int monPosY;
+    public int monPosX = 0;
+    public int monPosY = 0;
 
-    int moveToX;
-    int moveToY;
+    public int moveToX;
+    public int moveToY;
 
     public CharAction monsterAction;
+    public GameObject monsterObject;
 
     //-------몬스터 이동 변수----------
     Queue<Node> queue = new Queue<Node>(); //BFS알고리즘에서 사용할 큐
@@ -34,33 +36,30 @@ public class MonsterCtrl : MonoBehaviour
 
 
     //플레이어 위치 변수
-    Coords playerCoords;
+    public Coords playerCoords;
 
     FieldMgr fieldMgr = null;
-    PlayerCtrl playerCtrl = null;
+    public PlayerCtrl playerCtrl = null;
 
     // Start is called before the first frame update
-    void Start()
+    public MonsterCtrl()
     {
-        GameObject fieldObj = GameObject.Find("FieldMgr");
-        fieldMgr = fieldObj.GetComponent<FieldMgr>();
+        mType = MonsterType.melee;
+        maxMonHp = 15;
+        monHP = maxMonHp;
+        monPosX = 2;
+        monPosY = 0;
+
         GameObject playerObj = GameObject.FindWithTag("Player");
         playerCtrl = playerObj.GetComponent<PlayerCtrl>();
 
         monsterAction = CharAction.util;
 
         playerCoords = playerCtrl.GetPlayerCoords();
+    }
 
-        SetMonster();
-        RefreshMonHP();
-
-        if (fieldObj != null )   //몬스터 첫 위치 지정
-        {
-            transform.position = fieldMgr.field[monPosX, monPosY].transform.position;
-            fieldMgr.ObjOnTile(monPosX, monPosY, gameObject);
-        }
-
-        //Debug.Log(fieldMgr.ObjOnTile(monPosX,monPosY,null));
+    void Start()
+    {
 
     }
 
@@ -69,32 +68,25 @@ public class MonsterCtrl : MonoBehaviour
     {
         
     }
-    
-    void SetMonster()
-    {
-        Monster temp = monsterSO.monsters[1];
 
-        monHP = temp.hp;
-        monHPText.text = monHP.ToString();
-        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-        sprite.sprite = temp.monsterImg;
+    public void MonsterSpawnPoint(GameObject gameObject)
+    {
+        GameObject fieldObj = GameObject.Find("FieldMgr");
+        fieldMgr = fieldObj.GetComponent<FieldMgr>();
+
+        if (fieldMgr != null)   //몬스터 첫 위치 지정
+        {
+            Debug.Log(monPosX + " " + monPosY);
+            gameObject.transform.position = fieldMgr.field[monPosX, monPosY].transform.position;
+            fieldMgr.ObjOnTile(monPosX, monPosY, gameObject);
+        }
     }
 
-    public void MonsterActionArea() //몬스터 액션 칸 표시 함수
+    public virtual void MonsterActionArea() //몬스터 액션 칸 표시 함수
     {
         if(monsterAction == CharAction.attack)
         {
-            if(mType == MonsterType.melee)
-            {
-                AreaOnOff(playerCoords.x, playerCoords.y, CharAction.attack, true);
-            }
-            else if(mType == MonsterType.ranger)
-            {
-                AreaOnOff(monPosX-1, monPosY, CharAction.attack, true);
-                AreaOnOff(monPosX-2, monPosY, CharAction.attack, true);
-                AreaOnOff(monPosX-3, monPosY, CharAction.attack, true);
-                AreaOnOff(monPosX-4, monPosY, CharAction.attack, true);
-            }
+            AreaOnOff(playerCoords.x, playerCoords.y, CharAction.attack, true);
         }
         else if(monsterAction == CharAction.util)
         {
@@ -106,26 +98,12 @@ public class MonsterCtrl : MonoBehaviour
         }
     }
 
-    public void MonsterAction() //몬스터 액션 수행 함수
+    public virtual void MonsterAction() //몬스터 액션 수행 함수
     {
         if (monsterAction == CharAction.attack)
         {
-            if (mType == MonsterType.melee)
-            {
-                AreaOnOff(playerCoords.x, playerCoords.y, CharAction.attack, false);
-                MonAttack(playerCoords.x, playerCoords.y, 20);
-            }
-            else if (mType == MonsterType.ranger)
-            {
-                AreaOnOff(monPosX - 1, monPosY, CharAction.attack, false);
-                AreaOnOff(monPosX - 2, monPosY, CharAction.attack, false);
-                AreaOnOff(monPosX - 3, monPosY, CharAction.attack, false);
-                AreaOnOff(monPosX - 4, monPosY, CharAction.attack, false);
-                MonAttack(monPosX-1, monPosY, 10);
-                MonAttack(monPosX-2, monPosY, 10);
-                MonAttack(monPosX-3, monPosY, 10);
-                MonAttack(monPosX-4, monPosY, 10);
-            }
+            AreaOnOff(playerCoords.x, playerCoords.y, CharAction.attack, false);
+            MonAttack(playerCoords.x, playerCoords.y, 20);
         }
         else if(monsterAction == CharAction.util)
         {
@@ -168,16 +146,16 @@ public class MonsterCtrl : MonoBehaviour
         monPosX += x;
         monPosY += y;
 
-        fieldMgr.ObjOnTile(monPosX, monPosY, gameObject);   //이동할 위치에 몬스터 정보넣기
+        fieldMgr.ObjOnTile(monPosX, monPosY, monsterObject);   //이동할 위치에 몬스터 정보넣기
         bool isEnemyOnTile = fieldMgr.IsPlayerOnTile(monPosX, monPosY); //이동할 위치에 플레이어 존재 여부 확인
         if (isEnemyOnTile)  //적이 있다면 같이 있을 수 있게 위치 조정해주기
         {
-            transform.position = fieldMgr.field[monPosX, monPosY].transform.position;
-            transform.Translate(0.5f, 0, 0);
+            monsterObject.transform.position = fieldMgr.field[monPosX, monPosY].transform.position;
+            monsterObject.transform.Translate(0.5f, 0, 0);
         }
         else //적이 없다면 이동할 위치로 옮겨주기
         {
-            transform.position = fieldMgr.field[monPosX, monPosY].transform.position;
+            monsterObject.transform.position = fieldMgr.field[monPosX, monPosY].transform.position;
         }
     }
 
@@ -203,17 +181,17 @@ public class MonsterCtrl : MonoBehaviour
         {
             GameObject obj = GameObject.Find("BattleMgr");
             BattleMgr battleMgr = obj.GetComponent<BattleMgr>();
-            battleMgr.monsters.Remove(gameObject);  //몬스터 리스트에서 죽은 몬스터 제거
-            Destroy(gameObject);
+            battleMgr.monsters.Remove(monsterObject);  //몬스터 리스트에서 죽은 몬스터 제거
+            Destroy(monsterObject);
         }
     }
 
-    void RefreshMonHP()
+    public void RefreshMonHP()
     {
         monHPText.text = monHP.ToString();
     }
 
-    public void MonActionSelect()  //몬스터 동작 AI
+    public virtual void MonActionSelect()  //몬스터 동작 AI
     {
         playerCoords = playerCtrl.GetPlayerCoords();    //플레이어 위치 가져오기
 
@@ -223,60 +201,31 @@ public class MonsterCtrl : MonoBehaviour
         }
         else //전 행동이 공격이 아니였다면
         {
-            if (mType == MonsterType.melee)  //근접 몬스터의 경우
+            //----플레이어가 공격 범위 안에 있으면 공격
+            if (Mathf.Abs(monPosX - playerCoords.x) + Mathf.Abs(monPosY - playerCoords.y) <= 1)
             {
-                //----플레이어가 공격 범위에 있으면 공격
-                //근접 몬스터의 공격 범위
-                if (Mathf.Abs(monPosX - playerCoords.x) + Mathf.Abs(monPosY - playerCoords.y) <= 1)
-                {
-                    monsterAction = CharAction.attack;
-                }
-                //----아니면 이동
-                else
-                {
-                    monsterAction = CharAction.move;
-                }
+                monsterAction = CharAction.attack;
             }
-            else if (mType == MonsterType.ranger)
+            //----아니면 이동
+            else
             {
-                //----플레이어가 공격 범위에 있으면 공격
-                //원거리 몬스터의 공격 범위
-                if (monPosY == playerCoords.y)
-                {
-                    monsterAction = CharAction.attack;
-                }
-                //----아니면 이동
-                else
-                {
-                    monsterAction = CharAction.move;
-                }
+                monsterAction = CharAction.move;
             }
         }
     }
 
-    public void monMoveAI()
+    public virtual void monMoveAI()
     {
-        if (mType == MonsterType.melee) //근접 몬스터의 경우
-        {
-            //BFS 길찾기 알고리즘을 이용해 플레이어를 향해 이동
-            Node monsterPos = new Node(monPosX, monPosY, null, 0);
-            BFS(monsterPos);
-        }
-        else if(mType == MonsterType.ranger)    //원거리 몬스터의 경우
-        {
-            if (monPosY <= playerCoords.y)
-            {
-                //if(fieldMgr.IsMonOnTile(monPosX, monPosY +1))   //
-                //{
-                //    monPosY - 
-                //}
-                monPosY += 1;
-            }
-            else if (monPosY >= playerCoords.y)
-            {
-                monPosY -= 1;
-            }
-        }
+        playerCoords = playerCtrl.GetPlayerCoords();    //플레이어 위치 가져오기
+
+        //BFS 길찾기 알고리즘을 이용해 플레이어를 향해 이동
+        Node monsterPos = new Node(monPosX, monPosY, null, 0);
+        BFS(monsterPos);
+    }
+
+    public virtual void monAttackAI()
+    {
+
     }
 
     void BFS(Node s)    //너비우선탐색(Breadth-First Search) 알고리즘

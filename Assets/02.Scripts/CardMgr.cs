@@ -13,6 +13,7 @@ public enum CardType
 
 public class CardMgr : MonoBehaviour
 {
+    Card cardClass;
     public int cardNum;
     public Image cardArea;
     public Text cardName;
@@ -92,7 +93,7 @@ public class CardMgr : MonoBehaviour
                     GameObject selectedCardArea = GameObject.Find("SelectedCardList");
                     GameObject card = Instantiate(gameObject);
                     card.transform.localScale = new Vector3(0.72f, 0.72f, 1f);
-                    card.transform.SetParent(selectedCardArea.transform);   //카드 생성 후 선택된 카드목록UI에 표시
+                    card.transform.SetParent(selectedCardArea.transform, false);   //카드 생성 후 선택된 카드목록UI에 표시
 
                     if(this.tag != "UtilCard")
                     {

@@ -88,5 +88,9 @@ public class StageNode : MonoBehaviour
         {
             SceneManager.LoadScene("StoreScene");
         }
+        else if (stageType == StageType.rest)
+        {
+            SceneManager.LoadScene("RestScene");
+        }
     }
 }
