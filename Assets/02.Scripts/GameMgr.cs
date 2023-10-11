@@ -17,7 +17,9 @@ public class GameMgr : MonoBehaviour
     public static int stage = 1;
 
     //보유 카드리스트
-    public static List<int> cardInBagList = new List<int>(new int[] {0, 1, 2, 3, 4, 5, 6});
+    public static Dictionary<int, int> cardInBagList = new Dictionary<int, int>() { 
+        { 0, 0 }, { 1, 1 }, { 2, 2 }, {3, 3 }, {4, 4 }, {5, 5} 
+    };
 
     //게임의 모든 카드 정보 가져오기
     [SerializeField] CardSO cardSO = null;
@@ -54,8 +56,10 @@ public class GameMgr : MonoBehaviour
         curHp = maxHp;
         curSp = maxSp;
 
-        cardInBagList.Add(0);
-        cardInBagList.Add(1);
+        cardInBagList.Add(cardInBagList.Count, 1);
+        cardInBagList.Add(cardInBagList.Count, 2);
+        cardInBagList.Add(cardInBagList.Count, 6);
+        cardInBagList.Add(cardInBagList.Count, 7);
         itemList.Add(2);
         itemList.Add(3);
     }
@@ -102,6 +106,10 @@ public class GameMgr : MonoBehaviour
 
     public static void RefreshSP()
     {
+        if(curSp >= maxSp)
+        {
+            curSp = maxSp;
+        }
         GameObject spImg = GameObject.Find("PlayerSpBar");
         spBar = spImg.GetComponent<Image>();
         GameObject spText = GameObject.Find("SpTxt");
@@ -140,7 +148,9 @@ public class GameMgr : MonoBehaviour
     public static void ResetGame()
     {
         stage = 1;
-        cardInBagList = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6});
+        cardInBagList = new Dictionary<int, int>() { 
+            { 0, 0 }, { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 } 
+        };
         itemList.Clear();
         maxHp = 100;
         maxSp = 100;

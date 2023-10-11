@@ -34,7 +34,7 @@ public class StoreCardNode : MonoBehaviour
         
     }
 
-    void SetStoreCard()
+    void SetStoreCard() //상점 카드 설정
     {
         Card cardTemp = GameMgr.cardBuffer[cardNum];
         cardNum = cardTemp.cardNum;
@@ -48,19 +48,17 @@ public class StoreCardNode : MonoBehaviour
         cardCostTxt.text = cardCost.ToString();
     }
 
-    void BuyCard()
+    void BuyCard()  //카드 구매 함수
     {
-        if (GameMgr.curGold >= cardCost)
+        if (GameMgr.curGold >= cardCost)    //구입 가능한 골드일 경우
         {
+            //골드 차감 후 가방에 넣기
             GameMgr.curGold -= cardCost;
             GameMgr.RefreshGold();
-            GameMgr.cardInBagList.Add(cardNum);
+            GameMgr.cardInBagList.Add(GameMgr.cardInBagList.Count, cardNum);
+
+            //구매한 카드 구매불가 표시
             cardBuyBtn.gameObject.SetActive(false);
-            //if (itemImg != null)
-            //{
-            //    Debug.Log("test");
-            //    itemImg.color = new Color(0.5f, 0.5f, 0.5f);
-            //}
             Image[] images = gameObject.GetComponentsInChildren<Image>();
             foreach (Image image in images)
             {

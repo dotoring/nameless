@@ -42,15 +42,14 @@ public class MapMgr : MonoBehaviour
         //가방에 있는 카드만 동적생성
         for (int i = 0; i < GameMgr.cardBuffer.Count; i++)
         {
-            for (int j = 0; j < GameMgr.cardInBagList.Count; j++)
+            foreach(KeyValuePair<int, int> temp in GameMgr.cardInBagList)
             {
-                if (GameMgr.cardBuffer[i].cardNum == GameMgr.cardInBagList[j])
+                if (GameMgr.cardBuffer[i].cardNum == temp.Value)
                 {
                     GameObject card = Instantiate(cardPrefab);
                     card.transform.SetParent(cardBagContent.transform);
                     CardMgr cardInfo = card.GetComponent<CardMgr>();
-                    cardInfo.SetCard(GameMgr.cardBuffer[i]);
-                    break;
+                    cardInfo.SetCard(GameMgr.cardBuffer[i], temp.Key);
                 }
             }
         }

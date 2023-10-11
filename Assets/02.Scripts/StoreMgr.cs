@@ -47,14 +47,8 @@ public class StoreMgr : MonoBehaviour
     {
         for (int i = 0; i < 4;)  //전체 카드중 중복 없이 4개 랜덤 뽑기
         {
-            if (GameMgr.cardBuffer.Count <= GameMgr.cardInBagList.Count + storeCardList.Count)
-            {
-                break;
-            }
-            Debug.Log(GameMgr.cardBuffer.Count - GameMgr.cardInBagList.Count - storeCardList.Count);
-
             int temp = Random.Range(0, GameMgr.cardBuffer.Count);
-            if (storeCardList.Contains(temp) || GameMgr.cardInBagList.Contains(temp))
+            if (storeCardList.Contains(temp))
             {
                 continue;
             }
