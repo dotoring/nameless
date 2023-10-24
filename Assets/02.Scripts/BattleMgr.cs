@@ -42,6 +42,9 @@ public class BattleMgr : MonoBehaviour
     public GameObject playerPrefab = null;
     PlayerCtrl playerCtrl = null;
 
+    public Image turnImage = null;
+    public Text turnText = null;
+
     [Header("------Result------")]
     public GameObject resultPanel = null;
     public GameObject newCardPage = null;
@@ -66,7 +69,7 @@ public class BattleMgr : MonoBehaviour
 
     public static Phase phase;
     public List<GameObject> monsters = new List<GameObject>();
-    int totalMonsterCount;
+    int totalMonsterCount = 4;
 
     // Start is called before the first frame update
     void Start()
@@ -83,21 +86,21 @@ public class BattleMgr : MonoBehaviour
 
         //몬스터들 생성
         //totalMonsterCount = Random.Range(1, 3);
-        //for (int i = 0; i < totalMonsterCount; i++)
-        //{
-        //    GameObject mon = Instantiate(monsterPrefab);
-        //    monsters.Add(mon);
-        //}
-        GameObject mon = Instantiate(monsterPrefab);
-        monsters.Add(mon);
-        mon = Instantiate(monsterPrefab2);
-        monsters.Add(mon);
+        for (int i = 0; i < totalMonsterCount; i++)
+        {
+            GameObject mon = Instantiate(monsterPrefab);
+            monsters.Add(mon);
+        }
+        //GameObject mon = Instantiate(monsterPrefab);
+
+        //mon = Instantiate(monsterPrefab2);
+        //monsters.Add(mon);
         totalMonsterCount = monsters.Count;
         for (int i = 0; i < monsters.Count; i++)
         {
             MonsterNode monNode = monsters[i].GetComponent<MonsterNode>();
-            monNode.monster.monPosX = 5;
-            monNode.monster.monPosY = i * 2 + 1;
+            monNode.monster.monPosX = 4 + (i%2);
+            monNode.monster.monPosY = i;
             monNode.monster.MonsterSpawnPoint(monsters[i]);
         }
 
@@ -222,6 +225,15 @@ public class BattleMgr : MonoBehaviour
         {
             gameOverPanel.gameObject.SetActive(true);
         }
+
+        if(selectedCardOrder.Count == 3)
+        {
+            continueBtn.interactable = true;
+        }
+        else
+        {
+            continueBtn.interactable = false;
+        }
     }
 
     IEnumerator ActionPhase()
@@ -241,6 +253,11 @@ public class BattleMgr : MonoBehaviour
                     monNode.monster.MonActionSelect();  //플레이어의 위치에 따라 행동 결정
                 }
             }
+
+            turnText.text = i+1 + "Turn";
+            turnImage.gameObject.SetActive(true);
+            yield return new WaitForSeconds(1.0f);
+            turnImage.gameObject.SetActive(false);
 
             //=====================1.이동 || 유틸=====================
             //----------플레이어
@@ -364,6 +381,7 @@ public class BattleMgr : MonoBehaviour
             
             if (phase == Phase.gameOver) //플레이어가 사망했을 경우
             {
+                ClearSelectedCard();
                 yield break;    //코루틴 종료
             }
         }

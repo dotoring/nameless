@@ -12,7 +12,7 @@ public class GameMgr : MonoBehaviour
     public static float maxSp = 100;
     public static float curSp;
     public static float tempSp;
-    public static int curGold = 500;
+    public static int curGold = 350;
 
     public static int stage = 1;
 
@@ -67,8 +67,8 @@ public class GameMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Application.targetFrameRate = 60; //실행 프레임 속도 60프레임으로 고정
-        //QualitySettings.vSyncCount = 0; //모니터 주사율 고정
+        Application.targetFrameRate = 60; //실행 프레임 속도 60프레임으로 고정
+        QualitySettings.vSyncCount = 0; //모니터 주사율 고정
     }
 
     // Update is called once per frame

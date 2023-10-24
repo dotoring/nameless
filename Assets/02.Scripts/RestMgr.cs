@@ -13,7 +13,12 @@ public class RestMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(restBtn != null)
+        GameMgr.RefreshHP();
+        GameMgr.RefreshSP();
+        GameMgr.RefreshGold();
+        GameMgr.RefreshItems();
+
+        if (restBtn != null)
         {
             restBtn.onClick.AddListener(RestBtnClick);
         }

@@ -13,7 +13,7 @@ public class MageSlime : MonsterCtrl
         monHP = maxMonHp;
         monPosX = 5;
         monPosY = 2;
-
+        monDmg = 10;
         
     }
     // Start is called before the first frame update
@@ -55,10 +55,10 @@ public class MageSlime : MonsterCtrl
             AreaOnOff(monPosX - 2, monPosY, CharAction.attack, false);
             AreaOnOff(monPosX - 3, monPosY, CharAction.attack, false);
             AreaOnOff(monPosX - 4, monPosY, CharAction.attack, false);
-            MonAttack(monPosX - 1, monPosY, 10);
-            MonAttack(monPosX - 2, monPosY, 10);
-            MonAttack(monPosX - 3, monPosY, 10);
-            MonAttack(monPosX - 4, monPosY, 10);
+            MonAttack(monPosX - 1, monPosY, monDmg);
+            MonAttack(monPosX - 2, monPosY, monDmg);
+            MonAttack(monPosX - 3, monPosY, monDmg);
+            MonAttack(monPosX - 4, monPosY, monDmg);
         }
         else if (monsterAction == CharAction.util)
         {
@@ -98,6 +98,8 @@ public class MageSlime : MonsterCtrl
     {
         playerCoords = playerCtrl.GetPlayerCoords();    //플레이어 위치 가져오기
 
+        moveToX = 0;
+        moveToY = 0;
         if (monPosY < playerCoords.y) //플레이어와 y축 위치 먼저 맞추기 막혀있으면 돌아가기
         {
             if(IsPath(monPosX, monPosY + 1))
@@ -146,6 +148,7 @@ public class MageSlime : MonsterCtrl
         }
         else if (monPosY == playerCoords.y && monPosX - 4 >= playerCoords.x)    //플레이어와 y축이 같고 사거리 밖에 있을 때
         {
+            if(IsPath(monPosX - 1, monPosY))
             moveToX = -1;   //플레이어를 향해 이동
             moveToY = 0;
         }
@@ -154,11 +157,6 @@ public class MageSlime : MonsterCtrl
             if(IsPath(monPosX+1, monPosY))  //뒤로 이동 가능하면 이동
             {
                 moveToX = 1;
-                moveToY = 0;
-            }
-            else //불가능하면 정지
-            {
-                moveToX = 0;
                 moveToY = 0;
             }
         }

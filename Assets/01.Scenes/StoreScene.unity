@@ -216,11 +216,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1371731753}
-  - {fileID: 2033806559}
   - {fileID: 1979222565}
+  - {fileID: 943157542}
   - {fileID: 1512549735}
   - {fileID: 1151651746}
-  - {fileID: 943157542}
+  - {fileID: 2033806559}
   - {fileID: 1189477794}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -646,7 +646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 1797968900}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
   m_MovementType: 1
   m_Elasticity: 0.1
@@ -1201,7 +1201,7 @@ RectTransform:
   - {fileID: 816395817}
   - {fileID: 1764526656}
   m_Father: {fileID: 149528091}
-  m_RootOrder: 5
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2088,6 +2088,11 @@ MonoBehaviour:
   storeQuitBtn: {fileID: 1151651747}
   storeItemPref: {fileID: 3154434694689672854, guid: 253773c4eaac81440b7676979f448b6c, type: 3}
   storeCardPref: {fileID: 6469838324573974462, guid: 2e911e35aa6b82c4aa910a1c745f9e8f, type: 3}
+  cardBagContent: {fileID: 1797968899}
+  cardPrefab: {fileID: 1530940208111535280, guid: 7d0a9757ab77e14418f7022fc5be412a, type: 3}
+  bagBtn: {fileID: 1512549736}
+  bagCloseBtn: {fileID: 206670156}
+  bag: {fileID: 2033806558}
 --- !u!4 &1757855584
 Transform:
   m_ObjectHideFlags: 0
@@ -2554,7 +2559,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 149528091}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -2632,7 +2637,7 @@ RectTransform:
   - {fileID: 448014918}
   - {fileID: 206670155}
   m_Father: {fileID: 149528091}
-  m_RootOrder: 1
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

@@ -20,12 +20,17 @@ public class MonsterCtrl : MonoBehaviour
     public int maxMonHp;
     public int monHP;
     public Text monHPText;
+    public int monDmg;
+    public Text monDmgText;
 
     public int monPosX = 0;
     public int monPosY = 0;
 
     public int moveToX;
     public int moveToY;
+
+    public bool isEnemyOnTile;
+    public bool isMove = false;
 
     public CharAction monsterAction;
     public GameObject monsterObject;
@@ -66,7 +71,7 @@ public class MonsterCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void MonsterSpawnPoint(GameObject gameObject)
@@ -103,7 +108,7 @@ public class MonsterCtrl : MonoBehaviour
         if (monsterAction == CharAction.attack)
         {
             AreaOnOff(playerCoords.x, playerCoords.y, CharAction.attack, false);
-            MonAttack(playerCoords.x, playerCoords.y, 20);
+            MonAttack(playerCoords.x, playerCoords.y, monDmg);
         }
         else if(monsterAction == CharAction.util)
         {
@@ -147,16 +152,9 @@ public class MonsterCtrl : MonoBehaviour
         monPosY += y;
 
         fieldMgr.ObjOnTile(monPosX, monPosY, monsterObject);   //이동할 위치에 몬스터 정보넣기
-        bool isEnemyOnTile = fieldMgr.IsPlayerOnTile(monPosX, monPosY); //이동할 위치에 플레이어 존재 여부 확인
-        if (isEnemyOnTile)  //적이 있다면 같이 있을 수 있게 위치 조정해주기
-        {
-            monsterObject.transform.position = fieldMgr.field[monPosX, monPosY].transform.position;
-            monsterObject.transform.Translate(0.5f, 0, 0);
-        }
-        else //적이 없다면 이동할 위치로 옮겨주기
-        {
-            monsterObject.transform.position = fieldMgr.field[monPosX, monPosY].transform.position;
-        }
+        isEnemyOnTile = fieldMgr.IsPlayerOnTile(monPosX, monPosY); //이동할 위치에 플레이어 존재 여부 확인
+        isMove = true;
+
     }
 
     public void MonAttack(int x, int y, int dmg)    //몬스터 공격함수
@@ -176,7 +174,7 @@ public class MonsterCtrl : MonoBehaviour
     public void MonDamage(int dmg)  //몬스터가 피해를 받는 함수
     {
         monHP -= dmg;
-        RefreshMonHP();
+        RefreshMonStat();
         if(monHP <= 0)  //몬스터 체력이 0이하가 되면 사망처리
         {
             GameObject obj = GameObject.Find("BattleMgr");
@@ -186,9 +184,10 @@ public class MonsterCtrl : MonoBehaviour
         }
     }
 
-    public void RefreshMonHP()
+    public void RefreshMonStat()
     {
         monHPText.text = monHP.ToString();
+        monDmgText.text = monDmg.ToString();
     }
 
     public virtual void MonActionSelect()  //몬스터 동작 AI
@@ -276,7 +275,7 @@ public class MonsterCtrl : MonoBehaviour
             return false;
         }
 
-        if (visit[x, y] || fieldMgr.IsMonOnTile(x, y))  //탐색한 곳이거나 몬스터가 있는 곳일 때
+        if (visit[x, y] || (fieldMgr.IsMonOnTile(x, y) && !fieldMgr.IsPlayerOnTile(x, y)))  //탐색한 곳이거나 몬스터가 있는 곳일 때 플레이어가 있으면 ok
         {
             return false;
         }

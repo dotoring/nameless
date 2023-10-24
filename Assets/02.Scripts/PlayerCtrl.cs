@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.Experimental.GraphView.GraphView;
@@ -18,9 +19,14 @@ public class PlayerCtrl : MonoBehaviour
     int playerPosX = 1;
     int playerPosY = 2;
 
+    public Animator animator = null;
+    bool isPlayerMove = false;
+
     // Start is called before the first frame update
     void Start()
     {
+        //animator = gameObject.GetComponent<Animator>();
+
         GameObject fieldObj = GameObject.Find("FieldMgr");
         fieldMgr = fieldObj.GetComponent<FieldMgr>();
 
@@ -77,19 +83,38 @@ public class PlayerCtrl : MonoBehaviour
         }
         fieldMgr.ObjOnTile(playerPosX, playerPosY, gameObject); //이동할 위치에 플레이어 정보넣기
         bool isEnemyOnTile = fieldMgr.IsMonOnTile(playerPosX, playerPosY);  //이동할 위치에 몬스터 존재 여부 확인
-        if (isEnemyOnTile)  //적이 있다면 같이 있을 수 있게 위치 조정해주기
+        StartCoroutine(MoveAnim(isEnemyOnTile));
+    }
+
+    IEnumerator MoveAnim(bool isEnemyOnTile)
+    {
+        animator.SetBool("IsMove", true);
+        if (isEnemyOnTile)
         {
-            transform.position = fieldMgr.field[playerPosX, playerPosY].transform.position;
-            transform.Translate(-0.5f, 0, 0);
+            while (transform.position != fieldMgr.field[playerPosX, playerPosY].transform.position - new Vector3(0.5f, 0f, 0f))
+            {
+                transform.position = Vector2.MoveTowards(this.transform.position, fieldMgr.field[playerPosX, playerPosY].transform.position - new Vector3(0.5f, 0f, 0f), 3 * Time.deltaTime);
+                yield return new WaitForSeconds(0.01f);
+            }
         }
-        else //적이 없다면 이동할 위치로 옮겨주기
+        else
         {
-            transform.position = fieldMgr.field[playerPosX, playerPosY].transform.position;
+            while (transform.position != fieldMgr.field[playerPosX, playerPosY].transform.position)
+            {
+                transform.position = Vector2.MoveTowards(this.transform.position, fieldMgr.field[playerPosX, playerPosY].transform.position, 3 * Time.deltaTime);
+                yield return new WaitForSeconds(0.01f);
+            }
         }
+        animator.SetBool("IsMove", false);
+        yield break;
     }
 
     public void AttackAreaOnOff(int x, int y, bool b)
     {
+        if (b)
+        {
+            StartCoroutine(AttackAnim());
+        }
         if (playerPosX + x < FieldMgr.fieldWidth && playerPosX + x >= 0 &&
             playerPosY + y < FieldMgr.fieldHeight && playerPosY + y >= 0)
         {
@@ -112,6 +137,15 @@ public class PlayerCtrl : MonoBehaviour
                 tile.monsterObj.GetComponent<MonsterNode>().monster.MonDamage(dmg);
             }
         }
+    }
+
+    IEnumerator AttackAnim()
+    {
+        yield return new WaitForSeconds(0.5f);
+        animator.SetBool("IsAttack", true);
+        yield return new WaitForSeconds(0.5f);
+        animator.SetBool("IsAttack", false);
+        yield break;
     }
 
     public void UtilAreaOnOff(bool b)

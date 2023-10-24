@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slime : MonsterCtrl
+public class SpikeSlime : MonsterCtrl
 {
-    public Slime()
+    public SpikeSlime()
     {
         mType = MonsterType.melee;
-        name = "slime";
+        name = "SpikeSlime";
         maxMonHp = 15;
         monHP = maxMonHp;
         monPosX = 5;

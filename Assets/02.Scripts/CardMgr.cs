@@ -56,14 +56,11 @@ public class CardMgr : MonoBehaviour
             selectedEffect.gameObject.SetActive(false);
         }
 
-        if(GameMgr.tempSp < cardSP)
+        if(GameMgr.tempSp < cardSP && !isSelected && tag != "UtilCard")
         {
-            if(!isSelected || tag != "UtilCard")
+            foreach (Image image in images)
             {
-                foreach (Image image in images)
-                {
-                    image.color = new Color(0.5f, 0.5f, 0.5f);
-                }
+                image.color = new Color(0.5f, 0.5f, 0.5f);
             }
         }
         else

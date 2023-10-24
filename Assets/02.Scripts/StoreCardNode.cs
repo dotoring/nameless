@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class StoreCardNode : MonoBehaviour
 {
+    Card cardTemp;
+
     public int cardNum;
     public Image cardArea;
     public Text cardName;
@@ -36,7 +38,7 @@ public class StoreCardNode : MonoBehaviour
 
     void SetStoreCard() //상점 카드 설정
     {
-        Card cardTemp = GameMgr.cardBuffer[cardNum];
+        cardTemp = GameMgr.cardBuffer[cardNum];
         cardNum = cardTemp.cardNum;
         cardName.text = cardTemp.cardName;
         cardDmg = cardTemp.cardDmg;
@@ -57,6 +59,14 @@ public class StoreCardNode : MonoBehaviour
             GameMgr.RefreshGold();
             GameMgr.cardInBagList.Add(GameMgr.cardInBagList.Count, cardNum);
 
+            //가방에 새 카드 만들기
+            GameObject obj = GameObject.Find("StoreMgr");
+            StoreMgr storeMgr = obj.GetComponent<StoreMgr>();
+            GameObject card = Instantiate(storeMgr.cardPrefab);
+            card.transform.SetParent(storeMgr.cardBagContent.transform);
+            CardMgr cardInfo = card.GetComponent<CardMgr>();
+            cardInfo.SetCard(cardTemp, GameMgr.cardInBagList.Count);
+
             //구매한 카드 구매불가 표시
             cardBuyBtn.gameObject.SetActive(false);
             Image[] images = gameObject.GetComponentsInChildren<Image>();
@@ -64,6 +74,9 @@ public class StoreCardNode : MonoBehaviour
             {
                 image.color = new Color(0.5f, 0.5f, 0.5f);
             }
+
+            
+
         }
     }
 }

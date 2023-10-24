@@ -22,7 +22,7 @@ MonoBehaviour:
       y: 0
     cardType: 0
     cardImage: {fileID: 21300000, guid: 580dc94e7d98b174dbf486bd7556b9a1, type: 3}
-    cardCost: 0
+    cardCost: 200
   - cardNum: 1
     cardName: "\u2192\uC774\uB3D9"
     cardDmg: 0
@@ -32,7 +32,7 @@ MonoBehaviour:
       y: 0
     cardType: 0
     cardImage: {fileID: 21300000, guid: 29f7e09a81d79bc4bb1c2f20dd43cf28, type: 3}
-    cardCost: 0
+    cardCost: 200
   - cardNum: 2
     cardName: "\u2191\uC774\uB3D9"
     cardDmg: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
       y: 1
     cardType: 0
     cardImage: {fileID: 21300000, guid: 9aaba8352c6dca241823599799f1ee59, type: 3}
-    cardCost: 0
+    cardCost: 200
   - cardNum: 3
     cardName: "\u2193\uC774\uB3D9"
     cardDmg: 0
@@ -52,7 +52,7 @@ MonoBehaviour:
       y: -1
     cardType: 0
     cardImage: {fileID: 21300000, guid: 1a94649f94460c0488e4ff7ec42f39a8, type: 3}
-    cardCost: 0
+    cardCost: 200
   - cardNum: 4
     cardName: "\uCD1D\uBA85"
     cardDmg: 0
@@ -62,7 +62,7 @@ MonoBehaviour:
       y: 0
     cardType: 2
     cardImage: {fileID: 21300000, guid: 9e488577292715f4898593e8f6030daa, type: 3}
-    cardCost: 0
+    cardCost: 200
   - cardNum: 5
     cardName: "\uACF5\uACA91"
     cardDmg: 10
@@ -72,7 +72,7 @@ MonoBehaviour:
       y: 0
     cardType: 1
     cardImage: {fileID: 21300000, guid: f4ed1417b36f15b44989373a591ade04, type: 3}
-    cardCost: 0
+    cardCost: 100
   - cardNum: 6
     cardName: "\uACF5\uACA92"
     cardDmg: 5
@@ -82,10 +82,10 @@ MonoBehaviour:
       y: 0
     cardType: 1
     cardImage: {fileID: 21300000, guid: e9c45933fd4282a4eafe0040d2750a02, type: 3}
-    cardCost: 0
+    cardCost: 150
   - cardNum: 7
     cardName: "\uACF5\uACA93"
-    cardDmg: 15
+    cardDmg: 10
     cardSP: 14
     coords:
     - x: 1
@@ -94,7 +94,7 @@ MonoBehaviour:
       y: 0
     cardType: 1
     cardImage: {fileID: 21300000, guid: ffae132d5ce7d624c98b2f8fe3b16c71, type: 3}
-    cardCost: 0
+    cardCost: 200
   - cardNum: 8
     cardName: "\uACF5\uACA97"
     cardDmg: 15
