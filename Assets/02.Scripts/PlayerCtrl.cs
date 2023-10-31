@@ -134,7 +134,13 @@ public class PlayerCtrl : MonoBehaviour
             TileMgr tile = fieldMgr.field[playerPosX + x, playerPosY + y].GetComponent<TileMgr>();
             if (tile != null && tile.monsterObj != null)
             {
-                tile.monsterObj.GetComponent<MonsterNode>().monster.MonDamage(dmg);
+                MonsterCtrl monster = tile.monsterObj.GetComponent<MonsterNode>().monster;
+                monster.MonDamage(dmg);
+                if(monster.reflect > 0)
+                {
+                    GameMgr.curHp -= monster.reflect;
+                    GameMgr.RefreshHP();
+                }
             }
         }
     }

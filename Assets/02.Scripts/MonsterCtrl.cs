@@ -35,6 +35,9 @@ public class MonsterCtrl : MonoBehaviour
     public CharAction monsterAction;
     public GameObject monsterObject;
 
+    //-------몬스터 상태 변수--------
+    public int reflect = 0;
+
     //-------몬스터 이동 변수----------
     Queue<Node> queue = new Queue<Node>(); //BFS알고리즘에서 사용할 큐
     bool[,] visit = new bool[7, 5]; //탐색 한곳 체크 변수

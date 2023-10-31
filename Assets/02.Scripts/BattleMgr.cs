@@ -37,8 +37,7 @@ public class BattleMgr : MonoBehaviour
 
     public Button continueBtn = null;
 
-    public GameObject monsterPrefab = null;
-    public GameObject monsterPrefab2 = null;
+    public GameObject[] monsterPrefabs = null;
     public GameObject playerPrefab = null;
     PlayerCtrl playerCtrl = null;
 
@@ -69,7 +68,7 @@ public class BattleMgr : MonoBehaviour
 
     public static Phase phase;
     public List<GameObject> monsters = new List<GameObject>();
-    int totalMonsterCount = 4;
+    int totalMonsterCount = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -88,7 +87,7 @@ public class BattleMgr : MonoBehaviour
         //totalMonsterCount = Random.Range(1, 3);
         for (int i = 0; i < totalMonsterCount; i++)
         {
-            GameObject mon = Instantiate(monsterPrefab);
+            GameObject mon = Instantiate(monsterPrefabs[2]);
             monsters.Add(mon);
         }
         //GameObject mon = Instantiate(monsterPrefab);

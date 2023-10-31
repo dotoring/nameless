@@ -13,6 +13,7 @@ public class SpikeSlime : MonsterCtrl
         monPosX = 5;
         monPosY = 2;
         monDmg = 15;
+        reflect = 2;
     }
     // Start is called before the first frame update
     void Start()
