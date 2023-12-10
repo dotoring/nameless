@@ -16,6 +16,7 @@ TagManager:
   - Stage6
   - Stage7
   - Stage8
+  - Stage9
   layers:
   - Default
   - TransparentFX

@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public enum CharAction
 {
@@ -18,6 +16,8 @@ public class PlayerCtrl : MonoBehaviour
 
     int playerPosX = 1;
     int playerPosY = 2;
+
+    public int guard = 0;
 
     public Animator animator = null;
     bool isPlayerMove = false;
@@ -93,7 +93,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             while (transform.position != fieldMgr.field[playerPosX, playerPosY].transform.position - new Vector3(0.5f, 0f, 0f))
             {
-                transform.position = Vector2.MoveTowards(this.transform.position, fieldMgr.field[playerPosX, playerPosY].transform.position - new Vector3(0.5f, 0f, 0f), 3 * Time.deltaTime);
+                transform.position = Vector2.MoveTowards(this.transform.position, fieldMgr.field[playerPosX, playerPosY].transform.position - new Vector3(0.5f, 0f, 0f), 5 * Time.deltaTime);
                 yield return new WaitForSeconds(0.01f);
             }
         }
@@ -101,7 +101,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             while (transform.position != fieldMgr.field[playerPosX, playerPosY].transform.position)
             {
-                transform.position = Vector2.MoveTowards(this.transform.position, fieldMgr.field[playerPosX, playerPosY].transform.position, 3 * Time.deltaTime);
+                transform.position = Vector2.MoveTowards(this.transform.position, fieldMgr.field[playerPosX, playerPosY].transform.position, 5 * Time.deltaTime);
                 yield return new WaitForSeconds(0.01f);
             }
         }
@@ -148,9 +148,7 @@ public class PlayerCtrl : MonoBehaviour
     IEnumerator AttackAnim()
     {
         yield return new WaitForSeconds(0.5f);
-        animator.SetBool("IsAttack", true);
-        yield return new WaitForSeconds(0.5f);
-        animator.SetBool("IsAttack", false);
+        animator.SetTrigger("Attack");
         yield break;
     }
 
@@ -160,8 +158,13 @@ public class PlayerCtrl : MonoBehaviour
         tile.transform.Find("UtilArea").gameObject.SetActive(b);
     }
 
-    public void PlayerDamage(int dmg)
+    public void PlayerDamage(int dmg) //플레이어가 받는 데미지
     {
+        dmg = dmg - guard;
+        if(dmg < 0)
+        {
+            dmg = 0;
+        }
         GameMgr.curHp -= dmg;
         GameMgr.RefreshHP();
         if (GameMgr.curHp <= 0)
@@ -171,7 +174,7 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
-    public Coords GetPlayerCoords()
+    public Coords GetPlayerCoords() //플레이어 좌표 가져오는 함수
     {
         Coords playerCoords = new Coords();
         playerCoords.x = playerPosX;

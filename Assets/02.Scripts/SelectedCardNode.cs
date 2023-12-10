@@ -32,7 +32,14 @@ public class SelectedCardNode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(BattleMgr.phase == Phase.cardSelect)
+        {
+            selectedCardBtn.enabled = true;
+        }
+        else
+        {
+            selectedCardBtn.enabled = false;
+        }
     }
 
     public void SetCard(Card card, int key)
@@ -73,46 +80,49 @@ public class SelectedCardNode : MonoBehaviour
 
     void CancleCard()
     {
-        //선택된 카드 순서 리스트에서 key값이 일치하는 카드 찾아서 제거
-        for(int i = 0; i < BattleMgr.selectedCardOrder.Count; i++)
+        if(BattleMgr.phase == Phase.cardSelect)
         {
-            int key = BattleMgr.selectedCardOrder[i].GetComponent<CardMgr>().cardKey;
-            if(key == cardKey)
+            //선택된 카드 순서 리스트에서 key값이 일치하는 카드 찾아서 제거
+            for (int i = 0; i < BattleMgr.selectedCardOrder.Count; i++)
             {
-                BattleMgr.selectedCardOrder.Remove(BattleMgr.selectedCardOrder[i]);
-                break;
+                int key = BattleMgr.selectedCardOrder[i].GetComponent<CardMgr>().cardKey;
+                if (key == cardKey)
+                {
+                    BattleMgr.selectedCardOrder.Remove(BattleMgr.selectedCardOrder[i]);
+                    break;
+                }
             }
-        }
-        BattleMgr.selectedCardDic.Remove(cardKey);  //선택된 카드 딕셔너리에서 제거
-        GameObject obj = GameObject.Find("BattleMgr");
-        BattleMgr battleMgr = obj.GetComponent<BattleMgr>();
-        battleMgr.RefreshSelectedCardArea(); //선택된카드 화면 새로고침
+            BattleMgr.selectedCardDic.Remove(cardKey);  //선택된 카드 딕셔너리에서 제거
+            GameObject obj = GameObject.Find("BattleMgr");
+            BattleMgr battleMgr = obj.GetComponent<BattleMgr>();
+            battleMgr.RefreshSelectedCardArea(); //선택된카드 화면 새로고침
 
-        //가방안의 카드 중 해당하는 카드 찾아서 isSelected = false 해주기
-        GameObject bagObj = GameObject.Find("Canvas").transform.Find("Bag").gameObject;
-        
-        CardMgr[] childList = bagObj.GetComponentsInChildren<CardMgr>();
-        for(int i = 1; i < childList.Length; i++)
-        {
-            if (childList[i].cardKey == cardKey)
-            {
-                childList[i].isSelected = false;
-            }
-        }
+            //가방안의 카드 중 해당하는 카드 찾아서 isSelected = false 해주기
+            GameObject bagObj = GameObject.Find("Canvas").transform.Find("Bag").gameObject;
 
-        if(tag == "UtilCard")
-        {
-            GameMgr.tempSp -= cardSP;
-            if (GameMgr.tempSp <= 0)
+            CardMgr[] childList = bagObj.GetComponentsInChildren<CardMgr>();
+            for (int i = 1; i < childList.Length; i++)
             {
-                battleMgr.ClearSelectedCard();
-                battleMgr.RefreshSelectedCardArea(); //선택된카드 화면 새로고침
-                GameMgr.tempSp = GameMgr.curSp;
+                if (childList[i].cardKey == cardKey)
+                {
+                    childList[i].isSelected = false;
+                }
             }
-        }
-        else
-        {
-            GameMgr.tempSp += cardSP;
+
+            if (tag == "UtilCard")
+            {
+                GameMgr.tempSp -= cardSP;
+                if (GameMgr.tempSp <= 0)
+                {
+                    battleMgr.ClearSelectedCard();
+                    battleMgr.RefreshSelectedCardArea(); //선택된카드 화면 새로고침
+                    GameMgr.tempSp = GameMgr.curSp;
+                }
+            }
+            else
+            {
+                GameMgr.tempSp += cardSP;
+            }
         }
     }
 }

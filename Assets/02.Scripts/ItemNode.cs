@@ -36,6 +36,10 @@ public class ItemNode : MonoBehaviour
             case 0:
                 Debug.Log("체력포션");
                 GameMgr.curHp += 10;
+                if(GameMgr.curHp > GameMgr.maxHp)
+                {
+                    GameMgr.curHp = GameMgr.maxHp;
+                }
                 GameMgr.RefreshHP();
                 Destroy(gameObject);
                 GameMgr.itemList.Remove(itemNum);
@@ -43,6 +47,10 @@ public class ItemNode : MonoBehaviour
             case 1:
                 Debug.Log("기력포션");
                 GameMgr.curSp += 10;
+                if(GameMgr.curSp > GameMgr.maxSp)
+                {
+                    GameMgr.curSp = GameMgr.maxSp;
+                }
                 GameMgr.RefreshSP();
                 Destroy(gameObject);
                 GameMgr.itemList.Remove(itemNum);

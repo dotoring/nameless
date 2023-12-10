@@ -13,6 +13,9 @@ public class MapMgr : MonoBehaviour
     public Button bagCloseBtn = null;
     public GameObject bag = null;
 
+    public GameObject map = null;
+    public Button test = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -52,6 +55,17 @@ public class MapMgr : MonoBehaviour
                     cardInfo.SetCard(GameMgr.cardBuffer[i], temp.Key);
                 }
             }
+        }
+
+        if(test != null)
+        {
+            test.onClick.AddListener(() =>
+            {
+                Vector3 testVec;
+                Quaternion testQuat;
+                map.transform.GetPositionAndRotation(out testVec, out testQuat);
+                Debug.Log(testVec);
+            });
         }
     }
 

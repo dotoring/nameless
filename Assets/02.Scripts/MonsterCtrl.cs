@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,17 +25,19 @@ public class MonsterCtrl : MonoBehaviour
     public int monPosX = 0;
     public int monPosY = 0;
 
-    public int moveToX;
-    public int moveToY;
+    public int moveToX = 0;
+    public int moveToY = 0;
 
     public bool isEnemyOnTile;
     public bool isMove = false;
+    public bool isAttack = false;
 
     public CharAction monsterAction;
     public GameObject monsterObject;
 
     //-------몬스터 상태 변수--------
-    public int reflect = 0;
+    public int reflect = 0; //반사
+    public int block = 0; //데미지 감소
 
     //-------몬스터 이동 변수----------
     Queue<Node> queue = new Queue<Node>(); //BFS알고리즘에서 사용할 큐
@@ -46,7 +47,7 @@ public class MonsterCtrl : MonoBehaviour
     //플레이어 위치 변수
     public Coords playerCoords;
 
-    FieldMgr fieldMgr = null;
+    public FieldMgr fieldMgr = null;
     public PlayerCtrl playerCtrl = null;
 
     // Start is called before the first frame update
@@ -94,6 +95,7 @@ public class MonsterCtrl : MonoBehaviour
     {
         if(monsterAction == CharAction.attack)
         {
+            isAttack = true;
             AreaOnOff(playerCoords.x, playerCoords.y, CharAction.attack, true);
         }
         else if(monsterAction == CharAction.util)
@@ -157,11 +159,11 @@ public class MonsterCtrl : MonoBehaviour
         fieldMgr.ObjOnTile(monPosX, monPosY, monsterObject);   //이동할 위치에 몬스터 정보넣기
         isEnemyOnTile = fieldMgr.IsPlayerOnTile(monPosX, monPosY); //이동할 위치에 플레이어 존재 여부 확인
         isMove = true;
-
     }
 
     public void MonAttack(int x, int y, int dmg)    //몬스터 공격함수
     {
+        //isAttack = true;
         if (x < FieldMgr.fieldWidth && x >= 0 &&
             y < FieldMgr.fieldHeight && y >= 0)
         {
@@ -176,6 +178,11 @@ public class MonsterCtrl : MonoBehaviour
 
     public void MonDamage(int dmg)  //몬스터가 피해를 받는 함수
     {
+        dmg -= block;
+        if (dmg <= 0)
+        {
+            dmg = 0;
+        }
         monHP -= dmg;
         RefreshMonStat();
         if(monHP <= 0)  //몬스터 체력이 0이하가 되면 사망처리
@@ -223,6 +230,11 @@ public class MonsterCtrl : MonoBehaviour
         //BFS 길찾기 알고리즘을 이용해 플레이어를 향해 이동
         Node monsterPos = new Node(monPosX, monPosY, null, 0);
         BFS(monsterPos);
+        if (fieldMgr.IsMonOnTile(monPosX + moveToX, monPosY + moveToY)) //이동할 위치에 몬스터가 있을 때(버그 예방)
+        {
+            moveToX = 0;
+            moveToY = 0;
+        }
     }
 
     public virtual void monAttackAI()
@@ -278,7 +290,9 @@ public class MonsterCtrl : MonoBehaviour
             return false;
         }
 
-        if (visit[x, y] || (fieldMgr.IsMonOnTile(x, y) && !fieldMgr.IsPlayerOnTile(x, y)))  //탐색한 곳이거나 몬스터가 있는 곳일 때 플레이어가 있으면 ok
+        //탐색한 곳이거나 몬스터가 있는 곳일 때 =>false,
+        //단, 플레이어가 있으면 true(플레이어 위치를 큐에 넣기위해);
+        if (visit[x, y] || (fieldMgr.IsMonOnTile(x, y) && !fieldMgr.IsPlayerOnTile(x, y)))  
         {
             return false;
         }

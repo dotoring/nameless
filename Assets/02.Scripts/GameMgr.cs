@@ -60,8 +60,8 @@ public class GameMgr : MonoBehaviour
         cardInBagList.Add(cardInBagList.Count, 2);
         cardInBagList.Add(cardInBagList.Count, 6);
         cardInBagList.Add(cardInBagList.Count, 7);
-        itemList.Add(2);
-        itemList.Add(3);
+        cardInBagList.Add(cardInBagList.Count, 15);
+        itemList.Add(0);
     }
 
     // Start is called before the first frame update
@@ -93,6 +93,17 @@ public class GameMgr : MonoBehaviour
         }
     }
 
+    public static void Heal(int val)
+    {
+        curHp += val;
+        if( curHp > maxHp)
+        {
+            curHp = maxHp;
+        }
+
+        RefreshHP();
+    }
+
     public static void RefreshHP()
     {
         GameObject hpImg = GameObject.Find("PlayerHpBar");
@@ -104,6 +115,16 @@ public class GameMgr : MonoBehaviour
         hpTxt.text = "HP " + curHp + "/" + maxHp;
     }
 
+    public static void SPUp(int val)
+    {
+        curSp += val;
+        if( curSp > maxSp)
+        {
+            curSp = maxSp;
+        }
+
+        RefreshSP();
+    }
     public static void RefreshSP()
     {
         if(curSp >= maxSp)

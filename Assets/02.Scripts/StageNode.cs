@@ -55,12 +55,20 @@ public class StageNode : MonoBehaviour
                 if (this.tag == "Stage8")
                     button.interactable = true;
                 break;
+            case 9:
+                if (this.tag == "Stage9")
+                    button.interactable = true;
+                break;
         }
         button.onClick.AddListener(BtnClick);
 
         if(stageType == StageType.battle)
         {
             stageText.text = "battle";
+            if(this.tag == "Stage9")
+            {
+                stageText.text = "boss";
+            }
         }
         else if(stageType == StageType.store)
         {

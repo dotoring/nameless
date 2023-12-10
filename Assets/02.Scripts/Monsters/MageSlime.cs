@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class MageSlime : MonsterCtrl
@@ -32,6 +31,7 @@ public class MageSlime : MonsterCtrl
     {
         if (monsterAction == CharAction.attack)
         {
+            isAttack = true;
             AreaOnOff(monPosX - 1, monPosY, CharAction.attack, true);
             AreaOnOff(monPosX - 2, monPosY, CharAction.attack, true);
             AreaOnOff(monPosX - 3, monPosY, CharAction.attack, true);

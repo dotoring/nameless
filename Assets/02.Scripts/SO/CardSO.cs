@@ -12,6 +12,7 @@ public class Card
     public int cardSP;
     public Coords[] coords;
     public CardType cardType;
+    public int utileType;
     public Sprite cardImage;
     public int cardCost;
     

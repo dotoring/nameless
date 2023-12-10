@@ -23,6 +23,7 @@ public class CardMgr : MonoBehaviour
     public Text cardSPTxt;
     public List<Coords> cardCoords;
     public CardType cardType;
+    public int utilType;
     public bool isSelected = false;
 
     public Image selectedEffect;
@@ -56,18 +57,21 @@ public class CardMgr : MonoBehaviour
             selectedEffect.gameObject.SetActive(false);
         }
 
-        if(GameMgr.tempSp < cardSP && !isSelected && tag != "UtilCard")
+        if(BattleMgr.phase == Phase.cardSelect)
         {
-            foreach (Image image in images)
+            if (GameMgr.tempSp < cardSP && !isSelected && tag != "UtilCard")
             {
-                image.color = new Color(0.5f, 0.5f, 0.5f);
+                foreach (Image image in images)
+                {
+                    image.color = new Color(0.5f, 0.5f, 0.5f);
+                }
             }
-        }
-        else
-        {
-            foreach (Image image in images)
+            else
             {
-                image.color = new Color(1.0f, 1.0f, 1.0f);
+                foreach (Image image in images)
+                {
+                    image.color = new Color(1.0f, 1.0f, 1.0f);
+                }
             }
         }
     }
@@ -83,6 +87,7 @@ public class CardMgr : MonoBehaviour
         cardSP = card.cardSP;
         cardSPTxt.text = card.cardSP.ToString();
         cardArea.sprite = card.cardImage;
+        utilType = card.utileType;
 
         if(card.coords.Length != 0)
         {

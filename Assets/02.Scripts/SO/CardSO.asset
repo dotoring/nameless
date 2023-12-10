@@ -21,6 +21,7 @@ MonoBehaviour:
     - x: -1
       y: 0
     cardType: 0
+    utileType: 0
     cardImage: {fileID: 21300000, guid: 580dc94e7d98b174dbf486bd7556b9a1, type: 3}
     cardCost: 200
   - cardNum: 1
@@ -31,6 +32,7 @@ MonoBehaviour:
     - x: 1
       y: 0
     cardType: 0
+    utileType: 0
     cardImage: {fileID: 21300000, guid: 29f7e09a81d79bc4bb1c2f20dd43cf28, type: 3}
     cardCost: 200
   - cardNum: 2
@@ -41,6 +43,7 @@ MonoBehaviour:
     - x: 0
       y: 1
     cardType: 0
+    utileType: 0
     cardImage: {fileID: 21300000, guid: 9aaba8352c6dca241823599799f1ee59, type: 3}
     cardCost: 200
   - cardNum: 3
@@ -51,6 +54,7 @@ MonoBehaviour:
     - x: 0
       y: -1
     cardType: 0
+    utileType: 0
     cardImage: {fileID: 21300000, guid: 1a94649f94460c0488e4ff7ec42f39a8, type: 3}
     cardCost: 200
   - cardNum: 4
@@ -61,6 +65,7 @@ MonoBehaviour:
     - x: 0
       y: 0
     cardType: 2
+    utileType: 1
     cardImage: {fileID: 21300000, guid: 9e488577292715f4898593e8f6030daa, type: 3}
     cardCost: 200
   - cardNum: 5
@@ -71,28 +76,31 @@ MonoBehaviour:
     - x: 0
       y: 0
     cardType: 1
+    utileType: 0
     cardImage: {fileID: 21300000, guid: f4ed1417b36f15b44989373a591ade04, type: 3}
     cardCost: 100
   - cardNum: 6
     cardName: "\uACF5\uACA92"
     cardDmg: 5
-    cardSP: 12
+    cardSP: 15
     coords:
     - x: 1
       y: 0
     cardType: 1
+    utileType: 0
     cardImage: {fileID: 21300000, guid: e9c45933fd4282a4eafe0040d2750a02, type: 3}
     cardCost: 150
   - cardNum: 7
     cardName: "\uACF5\uACA93"
     cardDmg: 10
-    cardSP: 14
+    cardSP: 20
     coords:
     - x: 1
       y: 0
     - x: 2
       y: 0
     cardType: 1
+    utileType: 0
     cardImage: {fileID: 21300000, guid: ffae132d5ce7d624c98b2f8fe3b16c71, type: 3}
     cardCost: 200
   - cardNum: 8
@@ -107,6 +115,7 @@ MonoBehaviour:
     - x: 1
       y: -1
     cardType: 1
+    utileType: 0
     cardImage: {fileID: 21300000, guid: e6e60cc9d96432c4592413f215444602, type: 3}
     cardCost: 200
   - cardNum: 9
@@ -125,6 +134,7 @@ MonoBehaviour:
     - x: 1
       y: 0
     cardType: 1
+    utileType: 0
     cardImage: {fileID: 21300000, guid: ccf6b486d8e1a7049bbf50e083cd626a, type: 3}
     cardCost: 210
   - cardNum: 10
@@ -149,37 +159,77 @@ MonoBehaviour:
     - x: 1
       y: -1
     cardType: 1
+    utileType: 0
     cardImage: {fileID: 21300000, guid: 2d91de6c2cab72747bac876b442996df, type: 3}
     cardCost: 220
   - cardNum: 11
-    cardName: "\uACF5\uACA910"
-    cardDmg: 30
-    cardSP: 35
+    cardName: "\uC6B0\uB85C\uBCA0\uAE30"
+    cardDmg: 10
+    cardSP: 20
     coords:
+    - x: -1
+      y: -1
+    - x: 0
+      y: -1
     - x: 1
-      y: 0
+      y: -1
     cardType: 1
-    cardImage: {fileID: 21300000, guid: e9c45933fd4282a4eafe0040d2750a02, type: 3}
+    utileType: 0
+    cardImage: {fileID: 21300000, guid: 39b9b8a6345e84e46ab0aabc52736db2, type: 3}
     cardCost: 230
   - cardNum: 12
-    cardName: "\uACF5\uACA911"
-    cardDmg: 18
-    cardSP: 40
+    cardName: "\uC88C\uB85C\uBCA0\uAE30"
+    cardDmg: 10
+    cardSP: 20
     coords:
+    - x: -1
+      y: 1
+    - x: 0
+      y: 1
     - x: 1
-      y: 0
-    - x: 2
-      y: 0
+      y: 1
     cardType: 1
-    cardImage: {fileID: 21300000, guid: ffae132d5ce7d624c98b2f8fe3b16c71, type: 3}
-    cardCost: 240
+    utileType: 0
+    cardImage: {fileID: 21300000, guid: 4f961c239f36c30478b2c9518901e74f, type: 3}
+    cardCost: 230
   - cardNum: 13
-    cardName: "\uACF5\uACA912"
-    cardDmg: 50
+    cardName: "\uD3ED\uB82C\uCC38"
+    cardDmg: 20
     cardSP: 50
     coords:
     - x: 0
       y: 0
+    - x: -1
+      y: 1
+    - x: 1
+      y: 1
+    - x: -1
+      y: -1
+    - x: 1
+      y: -1
     cardType: 1
-    cardImage: {fileID: 21300000, guid: f4ed1417b36f15b44989373a591ade04, type: 3}
-    cardCost: 250
+    utileType: 0
+    cardImage: {fileID: 21300000, guid: 1da3a606748f77d4393106333e09d1ab, type: 3}
+    cardCost: 230
+  - cardNum: 14
+    cardName: "\uD6C4\uBC29\uCC0C\uB974\uAE30"
+    cardDmg: 15
+    cardSP: 15
+    coords:
+    - x: -1
+      y: 0
+    cardType: 1
+    utileType: 0
+    cardImage: {fileID: 21300000, guid: 9d3d1cb7a5c064a4bbf04bff40ba0e64, type: 3}
+    cardCost: 230
+  - cardNum: 15
+    cardName: "\uBC29\uC5B4"
+    cardDmg: 0
+    cardSP: 0
+    coords:
+    - x: -1
+      y: 0
+    cardType: 2
+    utileType: 3
+    cardImage: {fileID: 21300000, guid: 9e488577292715f4898593e8f6030daa, type: 3}
+    cardCost: 200

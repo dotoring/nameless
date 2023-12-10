@@ -1,10 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -68,7 +65,7 @@ public class BattleMgr : MonoBehaviour
 
     public static Phase phase;
     public List<GameObject> monsters = new List<GameObject>();
-    int totalMonsterCount = 1;
+    int totalMonsterCount = 5;
 
     // Start is called before the first frame update
     void Start()
@@ -84,24 +81,7 @@ public class BattleMgr : MonoBehaviour
         playerCtrl = playerObj.GetComponent<PlayerCtrl>();
 
         //몬스터들 생성
-        //totalMonsterCount = Random.Range(1, 3);
-        for (int i = 0; i < totalMonsterCount; i++)
-        {
-            GameObject mon = Instantiate(monsterPrefabs[2]);
-            monsters.Add(mon);
-        }
-        //GameObject mon = Instantiate(monsterPrefab);
-
-        //mon = Instantiate(monsterPrefab2);
-        //monsters.Add(mon);
-        totalMonsterCount = monsters.Count;
-        for (int i = 0; i < monsters.Count; i++)
-        {
-            MonsterNode monNode = monsters[i].GetComponent<MonsterNode>();
-            monNode.monster.monPosX = 4 + (i%2);
-            monNode.monster.monPosY = i;
-            monNode.monster.MonsterSpawnPoint(monsters[i]);
-        }
+        MonsterSpawning();
 
         //페이즈 설정
         phase = Phase.cardSelect;   
@@ -120,6 +100,10 @@ public class BattleMgr : MonoBehaviour
                 }
             }
         }
+
+        //선택된 카드 목록 초기화
+        selectedCardOrder.Clear();
+        selectedCardDic.Clear();
 
         //전투 승리시 나올 카드들 설정
         DrawRandomNewCard();
@@ -201,7 +185,7 @@ public class BattleMgr : MonoBehaviour
         }
         else if(phase == Phase.battleEndNewCard)
         {
-            if (GameMgr.stage == 8) //마지막 스테이지라면 엔딩씬으로 이동
+            if (GameMgr.stage == 9) //마지막 스테이지라면 엔딩씬으로 이동
             {
                 SceneManager.LoadScene("EndingScene");
             }
@@ -281,8 +265,7 @@ public class BattleMgr : MonoBehaviour
             }
             else if (selectedCardOrder[i].tag == "UtilCard")
             {
-                GameMgr.curSp += cardMgr.cardSP;
-                GameMgr.RefreshSP();
+
                 //선택된 카드오브젝트들 하나씩 지우기
                 Transform[] childList = selectedCardArea.GetComponentsInChildren<Transform>();
                 Destroy(childList[1].gameObject);
@@ -290,7 +273,23 @@ public class BattleMgr : MonoBehaviour
                 playerCtrl.UtilAreaOnOff(true);
                 yield return new WaitForSeconds(1.0f);  //공격표시 후 1초 쉬기
                 playerCtrl.UtilAreaOnOff(false);
-                //GameMgr.curSp += cardMgr.cardSP;
+                switch (cardMgr.utilType)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        //sp 회복
+                        GameMgr.SPUp(cardMgr.cardSP);
+                        break;
+                    case 2:
+                        GameMgr.Heal(20);
+                        //hp 회복
+                        break;
+                    case 3:
+                        playerCtrl.guard = 5;
+                        //방어
+                        break;
+                }
                 yield return new WaitForSeconds(1.0f);  //플레이어 행동 후 1초 쉬기
             }
 
@@ -352,9 +351,10 @@ public class BattleMgr : MonoBehaviour
                 for (int j = 0; j < monsters.Count; j++)    //모든 몬스터 순서대로
                 {
                     MonsterNode monNode = monsters[j].GetComponent<MonsterNode>();
-                    //몬스터 행동이 이동이라면
+                    //몬스터 행동이 공격이라면
                     if (monNode.monster.monsterAction == CharAction.attack)
                     {
+                        monNode.monster.monAttackAI();
                         monNode.monster.MonsterActionArea();
                         yield return new WaitForSeconds(1.0f);  //몬스터 행동 표시 후 1초 쉬기
                         monNode.monster.MonsterAction();
@@ -363,8 +363,10 @@ public class BattleMgr : MonoBehaviour
                 }
             }
 
+            playerCtrl.guard = 0;
+
             //=====================4.스테이지 판정=====================
-            if(monsters.Count <= 0) //몬스터가 전멸했을 경우
+            if (monsters.Count <= 0) //몬스터가 전멸했을 경우
             {
                 phase = Phase.battleEndNewCard; //전투 결과 페이즈로 넘어가기
 
@@ -499,5 +501,88 @@ public class BattleMgr : MonoBehaviour
             gold += Random.Range(50, 100);
         }
         return gold;
+    }
+
+    void MonsterSpawning()
+    {
+        if(GameMgr.stage == 1)
+        {
+            GameObject mon = Instantiate(monsterPrefabs[0]);
+            monsters.Add(mon);
+
+            MonsterNode monNode = monsters[0].GetComponent<MonsterNode>();
+            monNode.monster.monPosX = 5;
+            monNode.monster.monPosY = 2;
+            monNode.monster.MonsterSpawnPoint(monsters[0]);
+        }
+        else if(GameMgr.stage == 9)
+        {
+            GameObject mon = Instantiate(monsterPrefabs[5]);
+            monsters.Add(mon);
+
+            MonsterNode monNode = monsters[0].GetComponent<MonsterNode>();
+            monNode.monster.monPosX = 5;
+            monNode.monster.monPosY = 2;
+            monNode.monster.MonsterSpawnPoint(monsters[0]);
+        }
+        else
+        {
+            totalMonsterCount = Random.Range(2, 5);
+
+            for (int i = 0; i < totalMonsterCount; i++)
+            {
+                int monster = Random.Range(0, 5);
+                GameObject mon = Instantiate(monsterPrefabs[monster]);
+                monsters.Add(mon);
+            }
+
+            for (int i = 0; i < monsters.Count; i++)
+            {
+                MonsterNode monNode = monsters[i].GetComponent<MonsterNode>();
+                monNode.monster.monPosX = 4 + (i % 2);
+                monNode.monster.monPosY = i;
+                monNode.monster.MonsterSpawnPoint(monsters[i]);
+            }
+        }
+
+        //totalMonsterCount = 1;
+        //for (int i = 0; i < totalMonsterCount; i++)
+        //{
+        //    GameObject mon = Instantiate(monsterPrefabs[5]);
+        //    monsters.Add(mon);
+        //}
+
+        //for (int i = 0; i < monsters.Count; i++)
+        //{
+        //    MonsterNode monNode = monsters[i].GetComponent<MonsterNode>();
+        //    monNode.monster.monPosX = 4 + (i % 2);
+        //    monNode.monster.monPosY = i;
+        //    monNode.monster.MonsterSpawnPoint(monsters[i]);
+        //}
+
+        //MonsterNode monNode = monsters[0].GetComponent<MonsterNode>();
+        //monNode.monster.monPosX = 4;
+        //monNode.monster.monPosY = 2;
+        //monNode.monster.MonsterSpawnPoint(monsters[0]);
+
+        //monNode = monsters[1].GetComponent<MonsterNode>();
+        //monNode.monster.monPosX = 4;
+        //monNode.monster.monPosY = 3;
+        //monNode.monster.MonsterSpawnPoint(monsters[1]);
+
+        //monNode = monsters[2].GetComponent<MonsterNode>();
+        //monNode.monster.monPosX = 6;
+        //monNode.monster.monPosY = 3;
+        //monNode.monster.MonsterSpawnPoint(monsters[2]);
+
+        //monNode = monsters[3].GetComponent<MonsterNode>();
+        //monNode.monster.monPosX = 5;
+        //monNode.monster.monPosY = 2;
+        //monNode.monster.MonsterSpawnPoint(monsters[3]);
+
+        //monNode = monsters[4].GetComponent<MonsterNode>();
+        //monNode.monster.monPosX = 5;
+        //monNode.monster.monPosY = 4;
+        //monNode.monster.MonsterSpawnPoint(monsters[4]);
     }
 }
