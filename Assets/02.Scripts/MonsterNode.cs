@@ -15,6 +15,10 @@ public class MonsterNode : MonoBehaviour
     FieldMgr fieldMgr;
     PlayerCtrl playerCtrl;
 
+    //몬스터 정보 패널
+    public GameObject monsterInfoPanel;
+    GameObject infoPanel;
+
     void Awake()
     {
 
@@ -112,4 +116,19 @@ public class MonsterNode : MonoBehaviour
         yield break;
     }
 
+    private void OnMouseEnter()
+    {
+        infoPanel = Instantiate(monsterInfoPanel);
+        MonsterInfoPanel mip = infoPanel.GetComponent<MonsterInfoPanel>();
+        mip.MonsterName.text = monster.name;
+        mip.MonsterInfo.text = monster.monInfo;
+        GameObject canvas = GameObject.Find("MonsterCanvas");
+        infoPanel.transform.SetParent(canvas.transform);
+        infoPanel.transform.position = gameObject.transform.position + new Vector3(0, 1.2f);
+    }
+
+    private void OnMouseExit()
+    {
+        infoPanel.GetComponent<MonsterInfoPanel>().ClosePanel();
+    }
 }

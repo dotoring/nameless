@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 350960232186504301}
   - component: {fileID: 4841367281218680752}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: MonsterCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -379,6 +379,7 @@ GameObject:
   - component: {fileID: 6576642731444142016}
   - component: {fileID: 6576642731444142046}
   - component: {fileID: 8855021635120383511}
+  - component: {fileID: 279882813397306438}
   m_Layer: 0
   m_Name: StoneSlime
   m_TagString: Monster
@@ -419,6 +420,7 @@ MonoBehaviour:
   monSprite: {fileID: 9134263017571126424}
   monHPText: {fileID: 5076028057060626958}
   monDmgText: {fileID: 4859196809018756815}
+  monsterInfoPanel: {fileID: 6921669748435106677, guid: 0345819e16586c64e8ffe0959dff1d5d, type: 3}
 --- !u!95 &8855021635120383511
 Animator:
   serializedVersion: 5
@@ -440,6 +442,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!70 &279882813397306438
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6576642731444142045}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 6.5, y: 4}
+  m_Direction: 1
 --- !u!1 &7312720192760623538
 GameObject:
   m_ObjectHideFlags: 0

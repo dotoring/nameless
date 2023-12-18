@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 6576642730758650657}
   - component: {fileID: 6576642730758650656}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: MonsterCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -408,6 +408,7 @@ GameObject:
   - component: {fileID: 6576642731444142016}
   - component: {fileID: 6576642731444142046}
   - component: {fileID: 5850548346613403319}
+  - component: {fileID: 8300448584263559922}
   m_Layer: 0
   m_Name: BossKingSlime
   m_TagString: Monster
@@ -448,6 +449,7 @@ MonoBehaviour:
   monSprite: {fileID: 6266113345880664639}
   monHPText: {fileID: 6576642731039033903}
   monDmgText: {fileID: 6998203900941350284}
+  monsterInfoPanel: {fileID: 6921669748435106677, guid: 0345819e16586c64e8ffe0959dff1d5d, type: 3}
 --- !u!95 &5850548346613403319
 Animator:
   serializedVersion: 5
@@ -469,6 +471,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!70 &8300448584263559922
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6576642731444142045}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.1}
+  m_Size: {x: 2, y: 1.15}
+  m_Direction: 1
 --- !u!1 &6576642731618595521
 GameObject:
   m_ObjectHideFlags: 0

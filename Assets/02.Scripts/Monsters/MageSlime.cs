@@ -7,13 +7,13 @@ public class MageSlime : MonsterCtrl
     public MageSlime()
     {
         mType = MonsterType.ranger;
-        name = "MageSlime";
+        name = "마법 슬라임";
         maxMonHp = 5;
         monHP = maxMonHp;
         monPosX = 5;
         monPosY = 2;
         monDmg = 10;
-        
+        monInfo = "원거리 공격";
     }
     // Start is called before the first frame update
     void Start()
@@ -82,7 +82,7 @@ public class MageSlime : MonsterCtrl
         else //전 행동이 공격이 아니였다면
         {
             //----플레이어가 공격 범위 안에 있으면 공격
-            if (monPosY == playerCoords.y && monPosX-4 <= playerCoords.x)
+            if (monPosY == playerCoords.y && monPosX- playerCoords.x > 0)
             {
                 monsterAction = CharAction.attack;
             }
@@ -112,11 +112,6 @@ public class MageSlime : MonsterCtrl
                 moveToX = 1;
                 moveToY = 0;
             }
-            else if(IsPath(monPosX-1, monPosY))
-            {
-                moveToX = -1;
-                moveToY = 0;
-            }
             else if(IsPath(monPosX, monPosY-1))
             {
                 moveToX = 0;
@@ -133,11 +128,6 @@ public class MageSlime : MonsterCtrl
             else if (IsPath(monPosX + 1, monPosY))
             {
                 moveToX = 1;
-                moveToY = 0;
-            }
-            else if (IsPath(monPosX - 1, monPosY))
-            {
-                moveToX = -1;
                 moveToY = 0;
             }
             else if (IsPath(monPosX, monPosY + 1))

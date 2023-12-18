@@ -505,17 +505,31 @@ public class BattleMgr : MonoBehaviour
 
     void MonsterSpawning()
     {
-        if(GameMgr.stage == 1)
+        if(GameMgr.stage == 1) //첫 스테이지
         {
-            GameObject mon = Instantiate(monsterPrefabs[0]);
+            GameObject mon = Instantiate(monsterPrefabs[1]);
+            monsters.Add(mon);
+            mon = Instantiate(monsterPrefabs[4]);
             monsters.Add(mon);
 
             MonsterNode monNode = monsters[0].GetComponent<MonsterNode>();
             monNode.monster.monPosX = 5;
-            monNode.monster.monPosY = 2;
+            monNode.monster.monPosY = 4;
             monNode.monster.MonsterSpawnPoint(monsters[0]);
+            monNode = monsters[1].GetComponent<MonsterNode>();
+            monNode.monster.monPosX = 6;
+            monNode.monster.monPosY = 4;
+            monNode.monster.MonsterSpawnPoint(monsters[1]);
+
+            //GameObject mon = Instantiate(monsterPrefabs[0]);
+            //monsters.Add(mon);
+
+            //MonsterNode monNode = monsters[0].GetComponent<MonsterNode>();
+            //monNode.monster.monPosX = 5;
+            //monNode.monster.monPosY = 2;
+            //monNode.monster.MonsterSpawnPoint(monsters[0]);
         }
-        else if(GameMgr.stage == 9)
+        else if(GameMgr.stage == 9) //보스 스테이지
         {
             GameObject mon = Instantiate(monsterPrefabs[5]);
             monsters.Add(mon);

@@ -7,13 +7,14 @@ public class SpikeSlime : MonsterCtrl
     public SpikeSlime()
     {
         mType = MonsterType.melee;
-        name = "SpikeSlime";
+        name = "선인장 슬라임";
         maxMonHp = 15;
         monHP = maxMonHp;
         monPosX = 5;
         monPosY = 2;
         monDmg = 10;
         reflect = 2;
+        monInfo = "반사 2";
     }
     // Start is called before the first frame update
     void Start()

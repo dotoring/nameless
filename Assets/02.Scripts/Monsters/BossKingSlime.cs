@@ -11,12 +11,13 @@ public class BossKingSlime : MonsterCtrl
     public BossKingSlime()
     {
         mType = MonsterType.melee;
-        name = "BossKingSlime";
+        name = "킹슬라임";
         maxMonHp = 50;
         monHP = maxMonHp;
         monPosX = 5;
         monPosY = 2;
         monDmg = 15;
+        monInfo = "슬라임의 왕";
     }
     // Start is called before the first frame update
     void Start()

@@ -7,13 +7,14 @@ public class StoneSlime : MonsterCtrl
     public StoneSlime()
     {
         mType = MonsterType.melee;
-        name = "StoneSlime";
+        name = "암석 슬라임";
         maxMonHp = 20;
         monHP = maxMonHp;
         monPosX = 5;
         monPosY = 2;
         monDmg = 10;
         block = 3;
+        monInfo = "방어 3";
     }
     // Start is called before the first frame update
     void Start()

@@ -7,12 +7,13 @@ public class LightningSlime : MonsterCtrl
     public LightningSlime()
     {
         mType = MonsterType.melee;
-        name = "LightningSlime";
+        name = "번개 슬라임";
         maxMonHp = 10;
         monHP = maxMonHp;
         monPosX = 5;
         monPosY = 2;
         monDmg = 15;
+        monInfo = "제멋대로 움직이며\n번개를 일으킨다";
     }
     // Start is called before the first frame update
     void Start()
@@ -50,6 +51,7 @@ public class LightningSlime : MonsterCtrl
         Lightning();
     }
 
+    //무작위 방향으로 움직이게 하는 함수
     void Lightning()
     {
         moveToX = 0;
@@ -68,6 +70,12 @@ public class LightningSlime : MonsterCtrl
 
             if (IsPath(vx, vy))
             {
+                //IsPath에서 거르지 못한 플레이어와 몬스터가 같이 있는 곳으로 이동하려 할 경우 차단
+                if(fieldMgr.IsMonOnTile(vx, vy) && fieldMgr.IsPlayerOnTile(vx, vy))
+                {
+                    ints.RemoveAt(index);
+                    continue;
+                }
                 moveToX = dx[ints[index]];
                 moveToY = dy[ints[index]];
                 break;

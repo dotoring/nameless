@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 8245746746309528383}
   - component: {fileID: 1659188154849699393}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: MonsterCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -443,6 +443,7 @@ GameObject:
   - component: {fileID: 6576642731444142016}
   - component: {fileID: 6576642731444142046}
   - component: {fileID: 2916451146659900679}
+  - component: {fileID: -8497305793344116196}
   m_Layer: 0
   m_Name: LightningSlime
   m_TagString: Monster
@@ -483,6 +484,7 @@ MonoBehaviour:
   monSprite: {fileID: 491812953703637409}
   monHPText: {fileID: 4701347635146669043}
   monDmgText: {fileID: 7245738417147406416}
+  monsterInfoPanel: {fileID: 6921669748435106677, guid: 0345819e16586c64e8ffe0959dff1d5d, type: 3}
 --- !u!95 &2916451146659900679
 Animator:
   serializedVersion: 5
@@ -504,6 +506,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!70 &-8497305793344116196
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6576642731444142045}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 6.5, y: 4}
+  m_Direction: 1
 --- !u!1 &7653654499217706368
 GameObject:
   m_ObjectHideFlags: 0

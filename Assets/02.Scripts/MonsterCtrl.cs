@@ -21,6 +21,7 @@ public class MonsterCtrl : MonoBehaviour
     public Text monHPText;
     public int monDmg;
     public Text monDmgText;
+    public string monInfo;
 
     public int monPosX = 0;
     public int monPosY = 0;
@@ -50,32 +51,14 @@ public class MonsterCtrl : MonoBehaviour
     public FieldMgr fieldMgr = null;
     public PlayerCtrl playerCtrl = null;
 
-    // Start is called before the first frame update
     public MonsterCtrl()
     {
-        mType = MonsterType.melee;
-        maxMonHp = 15;
-        monHP = maxMonHp;
-        monPosX = 2;
-        monPosY = 0;
-
         GameObject playerObj = GameObject.FindWithTag("Player");
         playerCtrl = playerObj.GetComponent<PlayerCtrl>();
 
         monsterAction = CharAction.util;
 
         playerCoords = playerCtrl.GetPlayerCoords();
-    }
-
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void MonsterSpawnPoint(GameObject gameObject)

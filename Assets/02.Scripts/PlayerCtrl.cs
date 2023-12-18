@@ -14,8 +14,8 @@ public class PlayerCtrl : MonoBehaviour
 {
     FieldMgr fieldMgr = null;
 
-    int playerPosX = 1;
-    int playerPosY = 2;
+    int playerPosX = 4;
+    int playerPosY = 4;
 
     public int guard = 0;
 

@@ -314,6 +314,7 @@ GameObject:
   - component: {fileID: 6576642731444142016}
   - component: {fileID: 6576642731444142046}
   - component: {fileID: 3264082667002429623}
+  - component: {fileID: -6943437703469564031}
   m_Layer: 0
   m_Name: SpikeSlime
   m_TagString: Monster
@@ -354,6 +355,7 @@ MonoBehaviour:
   monSprite: {fileID: 2807302250016839517}
   monHPText: {fileID: 5610503369891123164}
   monDmgText: {fileID: 4604354586211812746}
+  monsterInfoPanel: {fileID: 6921669748435106677, guid: 0345819e16586c64e8ffe0959dff1d5d, type: 3}
 --- !u!95 &3264082667002429623
 Animator:
   serializedVersion: 5
@@ -375,6 +377,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!70 &-6943437703469564031
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6576642731444142045}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 6.5, y: 4}
+  m_Direction: 1
 --- !u!1 &6798865295236990551
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,7 +406,7 @@ GameObject:
   - component: {fileID: 1669937859406173263}
   - component: {fileID: 6695187408742175527}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: MonsterCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

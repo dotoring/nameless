@@ -7,12 +7,13 @@ public class Slime : MonsterCtrl
     public Slime()
     {
         mType = MonsterType.melee;
-        name = "slime";
+        name = "슬라임";
         maxMonHp = 15;
         monHP = maxMonHp;
         monPosX = 5;
         monPosY = 2;
         monDmg = 15;
+        monInfo = "평범한 슬라임";
     }
     // Start is called before the first frame update
     void Start()
