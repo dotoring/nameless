@@ -253,7 +253,7 @@ public class BattleMgr : MonoBehaviour
                 Destroy(childList[1].gameObject);
 
                 playerCtrl.MoveAreaOnOff(cardMgr.cardCoords[0].x, cardMgr.cardCoords[0].y, true);   //이동 위치 표시
-                yield return new WaitForSeconds(1.0f);  //이동표시 후 1초 쉬기
+                yield return new WaitForSeconds(0.5f);  //이동표시 후 1초 쉬기
                 playerCtrl.MoveAreaOnOff(cardMgr.cardCoords[0].x, cardMgr.cardCoords[0].y, false);  //이동 위치 표시 끄기
                 playerCtrl.Move(cardMgr.cardCoords[0].x, cardMgr.cardCoords[0].y);  //위치로 이동
                 for (int j = 0; j < monsters.Count; j++)
@@ -261,7 +261,7 @@ public class BattleMgr : MonoBehaviour
                     MonsterNode monNode = monsters[j].GetComponent<MonsterNode>();
                     monNode.monster.Move(0, 0);
                 }
-                yield return new WaitForSeconds(1.0f);  //플레이어 행동 후 1초 쉬기
+                yield return new WaitForSeconds(0.5f);  //플레이어 행동 후 1초 쉬기
             }
             else if (selectedCardOrder[i].tag == "UtilCard")
             {
@@ -271,7 +271,7 @@ public class BattleMgr : MonoBehaviour
                 Destroy(childList[1].gameObject);
 
                 playerCtrl.UtilAreaOnOff(true);
-                yield return new WaitForSeconds(1.0f);  //공격표시 후 1초 쉬기
+                yield return new WaitForSeconds(0.5f);  //유틸표시 후 1초 쉬기
                 playerCtrl.UtilAreaOnOff(false);
                 switch (cardMgr.utilType)
                 {
@@ -290,7 +290,7 @@ public class BattleMgr : MonoBehaviour
                         //방어
                         break;
                 }
-                yield return new WaitForSeconds(1.0f);  //플레이어 행동 후 1초 쉬기
+                yield return new WaitForSeconds(0.5f);  //플레이어 행동 후 1초 쉬기
             }
 
             //----------몬스터
@@ -304,18 +304,18 @@ public class BattleMgr : MonoBehaviour
                     {
                         monNode.monster.monMoveAI();
                         monNode.monster.MonsterActionArea();
-                        yield return new WaitForSeconds(1.0f);  //몬스터 행동 표시 후 1초 쉬기
+                        yield return new WaitForSeconds(0.5f);  //몬스터 행동 표시 후 1초 쉬기
                         monNode.monster.MonsterAction();
                         playerCtrl.Move(0, 0);  //위치 재조정을 위해
-                        yield return new WaitForSeconds(1.0f);  //몬스터 행동 후 1초 쉬기
+                        yield return new WaitForSeconds(0.5f);  //몬스터 행동 후 1초 쉬기
                     }
                     //몬스터 행동이 유틸이라면
                     else if (monNode.monster.monsterAction == CharAction.util)
                     {
                         monNode.monster.MonsterActionArea();
-                        yield return new WaitForSeconds(1.0f);  //몬스터 행동 표시 후 1초 쉬기
+                        yield return new WaitForSeconds(0.5f);  //몬스터 행동 표시 후 1초 쉬기
                         monNode.monster.MonsterAction();
-                        yield return new WaitForSeconds(1.0f);  //몬스터 행동 후 1초 쉬기
+                        yield return new WaitForSeconds(0.5f);  //몬스터 행동 후 1초 쉬기
                     }
                 }
             }
@@ -507,27 +507,13 @@ public class BattleMgr : MonoBehaviour
     {
         if(GameMgr.stage == 1) //첫 스테이지
         {
-            GameObject mon = Instantiate(monsterPrefabs[1]);
-            monsters.Add(mon);
-            mon = Instantiate(monsterPrefabs[4]);
+            GameObject mon = Instantiate(monsterPrefabs[0]);
             monsters.Add(mon);
 
             MonsterNode monNode = monsters[0].GetComponent<MonsterNode>();
             monNode.monster.monPosX = 5;
-            monNode.monster.monPosY = 4;
+            monNode.monster.monPosY = 2;
             monNode.monster.MonsterSpawnPoint(monsters[0]);
-            monNode = monsters[1].GetComponent<MonsterNode>();
-            monNode.monster.monPosX = 6;
-            monNode.monster.monPosY = 4;
-            monNode.monster.MonsterSpawnPoint(monsters[1]);
-
-            //GameObject mon = Instantiate(monsterPrefabs[0]);
-            //monsters.Add(mon);
-
-            //MonsterNode monNode = monsters[0].GetComponent<MonsterNode>();
-            //monNode.monster.monPosX = 5;
-            //monNode.monster.monPosY = 2;
-            //monNode.monster.MonsterSpawnPoint(monsters[0]);
         }
         else if(GameMgr.stage == 9) //보스 스테이지
         {

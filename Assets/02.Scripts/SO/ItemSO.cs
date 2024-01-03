@@ -7,6 +7,7 @@ public class Item
 {
     public int itemNum;
     public string itemName;
+    public string itemInfo;
     public int itemCost;
     public Sprite itemImage;
 }

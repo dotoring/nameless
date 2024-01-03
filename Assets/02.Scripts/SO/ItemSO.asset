@@ -14,22 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   items:
   - itemNum: 0
-    itemName: "\uCCB4\uB825\uD3EC\uC158"
+    itemName: "\uCCB4\uB825\uD3EC\uC158(\uC18C)"
+    itemInfo: "\uCCB4\uB825\uC744 20 \uD68C\uBCF5\uD569\uB2C8\uB2E4"
     itemCost: 100
     itemImage: {fileID: 21300000, guid: fee37a5208fa3c34eb2180a28ff9ca81, type: 3}
   - itemNum: 1
     itemName: "\uAE30\uB825\uD3EC\uC158"
+    itemInfo: "\uAE30\uB825\uC744 20 \uD68C\uBCF5\uD569\uB2C8\uB2E4"
     itemCost: 120
     itemImage: {fileID: 21300000, guid: a4f215e05fc7716429af219ae35c7b35, type: 3}
   - itemNum: 2
-    itemName: "\uD798\uD3EC\uC158"
+    itemName: "\uCCB4\uB825\uD3EC\uC158(\uC911)"
+    itemInfo: "\uCCB4\uB825\uC744 50 \uD68C\uBCF5\uD569\uB2C8\uB2E4"
     itemCost: 150
     itemImage: {fileID: 21300000, guid: ac5cd3a967f676749a92617b38c5a2e3, type: 3}
   - itemNum: 3
     itemName: "\uBD95\uB300"
+    itemInfo: "\uCCB4\uB825\uC744 80%\uAE4C\uC9C0 \uD68C\uBCF5\uD569\uB2C8\uB2E4"
     itemCost: 200
     itemImage: {fileID: 21300000, guid: 720cd1c005f7fe54fbe270433f5424aa, type: 3}
   - itemNum: 4
-    itemName: "\uC9C4\uD1B5\uC81C"
+    itemName: "\uCCB4\uB825\uD3EC\uC158(\uB300)"
+    itemInfo: "\uCCB4\uB825\uC744 80 \uD68C\uBCF5\uD569\uB2C8\uB2E4"
     itemCost: 300
-    itemImage: {fileID: 21300000, guid: 619d73d8279488e44ad15761d2b24b72, type: 3}
+    itemImage: {fileID: 21300000, guid: d81cbeb8efd2823489ff040e8dea504f, type: 3}

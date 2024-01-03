@@ -57,16 +57,20 @@ public class MapMgr : MonoBehaviour
             }
         }
 
-        if(test != null)
-        {
-            test.onClick.AddListener(() =>
-            {
-                Vector3 testVec;
-                Quaternion testQuat;
-                map.transform.GetPositionAndRotation(out testVec, out testQuat);
-                Debug.Log(testVec);
-            });
-        }
+        //if(test != null)
+        //{
+        //    test.onClick.AddListener(() =>
+        //    {
+        //        Vector3 testVec;
+        //        Quaternion testQuat;
+        //        map.transform.GetPositionAndRotation(out testVec, out testQuat);
+        //        Debug.Log(testVec);
+        //        map.transform.position = testVec + new Vector3(-250, 0, 0);
+        //    });
+        //}
+
+        //맵을 다음 스테이지 위치로
+        map.transform.position = new Vector3(((GameMgr.stage - 1) * -250), 720, 0);
     }
 
     // Update is called once per frame

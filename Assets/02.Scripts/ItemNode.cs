@@ -8,13 +8,34 @@ public class ItemNode : MonoBehaviour
     public int itemNum = 0;
     public Image itemImage;
     Button itemBtn = null;
+    public GameObject itemInfoPanel = null;
+    public Text itemName = null;
+    public Text itemInfo = null;
+    public Button itemUseBtn = null;
+    public Button itemCancelBtn = null;
 
     // Start is called before the first frame update
     void Start()
     {
         SetItem();
         itemBtn = GetComponent<Button>();
-        itemBtn.onClick.AddListener(ItemUse);
+        itemBtn.onClick.AddListener(() =>
+        {
+            GameObject panel = GameObject.Find("ItemInfoPanel");
+            if (panel != null)
+            {
+                panel.SetActive(false);
+            }
+            itemInfoPanel.SetActive(!itemInfoPanel.active);
+        });
+
+        itemUseBtn.onClick.AddListener(ItemUse);
+
+        itemCancelBtn.onClick.AddListener(() =>
+        {
+            itemInfoPanel.SetActive(false);
+        });
+
     }
 
     // Update is called once per frame
@@ -26,6 +47,8 @@ public class ItemNode : MonoBehaviour
     void SetItem()
     {
         Item itemTemp = GameMgr.itemBuffer[itemNum];
+        itemName.text = itemTemp.itemName;
+        itemInfo.text = itemTemp.itemInfo;
         itemImage.sprite = itemTemp.itemImage;
     }
 
@@ -34,8 +57,8 @@ public class ItemNode : MonoBehaviour
         switch(itemNum)
         {
             case 0:
-                Debug.Log("체력포션");
-                GameMgr.curHp += 10;
+                Debug.Log("체력포션(소)");
+                GameMgr.curHp += 20;
                 if(GameMgr.curHp > GameMgr.maxHp)
                 {
                     GameMgr.curHp = GameMgr.maxHp;
@@ -46,7 +69,7 @@ public class ItemNode : MonoBehaviour
                 break;
             case 1:
                 Debug.Log("기력포션");
-                GameMgr.curSp += 10;
+                GameMgr.curSp += 20;
                 if(GameMgr.curSp > GameMgr.maxSp)
                 {
                     GameMgr.curSp = GameMgr.maxSp;
@@ -56,19 +79,34 @@ public class ItemNode : MonoBehaviour
                 GameMgr.itemList.Remove(itemNum);
                 break;
             case 2:
-                Debug.Log("힘포션");
+                Debug.Log("체력포션(중)");
+                GameMgr.curHp += 50;
+                if (GameMgr.curHp > GameMgr.maxHp)
+                {
+                    GameMgr.curHp = GameMgr.maxHp;
+                }
+                GameMgr.RefreshHP();
                 Destroy(gameObject);
                 GameMgr.itemList.Remove(itemNum);
                 break;
             case 3:
                 Debug.Log("붕대");
-                GameMgr.curHp = GameMgr.maxHp * 0.8f;
+                if(GameMgr.curHp < GameMgr.maxHp * 0.8f)
+                {
+                    GameMgr.curHp = GameMgr.maxHp * 0.8f;
+                }
                 GameMgr.RefreshHP();
                 Destroy(gameObject);
                 GameMgr.itemList.Remove(itemNum);
                 break;
             case 4:
-                Debug.Log("진통제");
+                Debug.Log("체력포션(대)");
+                GameMgr.curHp += 80;
+                if (GameMgr.curHp > GameMgr.maxHp)
+                {
+                    GameMgr.curHp = GameMgr.maxHp;
+                }
+                GameMgr.RefreshHP();
                 Destroy(gameObject);
                 GameMgr.itemList.Remove(itemNum);
                 break;

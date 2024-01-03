@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/01.Scenes/RestScene.unity
     guid: 6415c4e328d96104ab6819aa3cb18b97
+  - enabled: 1
+    path: Assets/01.Scenes/StatusUI.unity
+    guid: 15b27b99b31a816498e089e8024d45f4
   m_configObjects: {}

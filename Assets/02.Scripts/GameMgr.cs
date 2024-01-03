@@ -62,19 +62,8 @@ public class GameMgr : MonoBehaviour
         cardInBagList.Add(cardInBagList.Count, 7);
         cardInBagList.Add(cardInBagList.Count, 15);
         itemList.Add(0);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        Application.targetFrameRate = 60; //실행 프레임 속도 60프레임으로 고정
-        QualitySettings.vSyncCount = 0; //모니터 주사율 고정
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        itemList.Add(1);
+        itemList.Add(2);
     }
 
     void SetUpCardBuffer()

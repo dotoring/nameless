@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GlobalValue : MonoBehaviour
+public class GlobalValue
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public static int g_MaxHp;
+    public static int g_CurHp;
+    public static int g_MaxSp;
+    public static int g_CurSp;
+    public static int g_CurGold;
+    public static int g_Stage;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public static Dictionary<int, int> ownCards = new Dictionary<int, int>();
+    public static List<int> ownItems = new List<int>();
 }
