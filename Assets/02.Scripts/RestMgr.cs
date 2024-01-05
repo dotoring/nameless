@@ -13,11 +13,6 @@ public class RestMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameMgr.RefreshHP();
-        GameMgr.RefreshSP();
-        GameMgr.RefreshGold();
-        GameMgr.RefreshItems();
-
         if (restBtn != null)
         {
             restBtn.onClick.AddListener(RestBtnClick);
@@ -49,6 +44,7 @@ public class RestMgr : MonoBehaviour
         }
         GameMgr.stage++;
         SceneManager.LoadScene("MapScene");
+        SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
     }
 
     void HealthBtnClick()
@@ -56,6 +52,7 @@ public class RestMgr : MonoBehaviour
         GameMgr.maxHp += 10;
         GameMgr.stage++;
         SceneManager.LoadScene("MapScene");
+        SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
     }
 
     void MeditBtnClick()
@@ -64,5 +61,6 @@ public class RestMgr : MonoBehaviour
         GameMgr.curSp = GameMgr.maxSp;
         GameMgr.stage++;
         SceneManager.LoadScene("MapScene");
+        SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
     }
 }

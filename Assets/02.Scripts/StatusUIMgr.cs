@@ -15,6 +15,11 @@ public class StatusUIMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameMgr.RefreshHP();
+        GameMgr.RefreshSP();
+        GameMgr.RefreshGold();
+        GameMgr.RefreshItems();
+
         if (bagBtn != null)
         {
             bagBtn.onClick.AddListener(() =>
@@ -31,6 +36,11 @@ public class StatusUIMgr : MonoBehaviour
             });
         }
 
+        RefreshCardBag();
+    }
+
+    public void RefreshCardBag()
+    {
         //가방에 있는 카드만 동적생성
         for (int i = 0; i < GameMgr.cardBuffer.Count; i++)
         {
@@ -47,9 +57,19 @@ public class StatusUIMgr : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ClearIsSelected()
     {
-        
+        Transform[] child = cardBagContent.GetComponentsInChildren<Transform>();
+        if (child != null)
+        {
+            for (int i = 1; i < child.Length; i++)
+            {
+                CardMgr cardMgr = child[i].gameObject.GetComponent<CardMgr>();
+                if (cardMgr != null)
+                {
+                    cardMgr.isSelected = false;
+                }
+            }
+        }
     }
 }

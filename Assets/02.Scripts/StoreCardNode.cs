@@ -59,11 +59,10 @@ public class StoreCardNode : MonoBehaviour
             GameMgr.RefreshGold();
             GameMgr.cardInBagList.Add(GameMgr.cardInBagList.Count, cardNum);
 
-            //가방에 새 카드 만들기
-            GameObject obj = GameObject.Find("StoreMgr");
-            StoreMgr storeMgr = obj.GetComponent<StoreMgr>();
-            GameObject card = Instantiate(storeMgr.cardPrefab);
-            card.transform.SetParent(storeMgr.cardBagContent.transform);
+            GameObject obj = GameObject.Find("StatusUIMgr");
+            StatusUIMgr statusUIMgr = obj.GetComponent<StatusUIMgr>();
+            GameObject card = Instantiate(statusUIMgr.cardPrefab);
+            card.transform.SetParent(statusUIMgr.cardBagContent.transform);
             CardMgr cardInfo = card.GetComponent<CardMgr>();
             cardInfo.SetCard(cardTemp, GameMgr.cardInBagList.Count);
 
@@ -74,9 +73,6 @@ public class StoreCardNode : MonoBehaviour
             {
                 image.color = new Color(0.5f, 0.5f, 0.5f);
             }
-
-            
-
         }
     }
 }

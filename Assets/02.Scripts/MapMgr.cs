@@ -19,55 +19,7 @@ public class MapMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameMgr.RefreshHP();
-        GameMgr.RefreshSP();
-        GameMgr.RefreshGold();
-        GameMgr.RefreshItems();
-
         BattleMgr.phase = Phase.map;
-
-        if(bagBtn != null)
-        {
-            bagBtn.onClick.AddListener(() =>
-            {
-                bag.gameObject.SetActive(true);
-            });
-        }
-
-        if(bagCloseBtn != null)
-        {
-            bagCloseBtn.onClick.AddListener(() =>
-            {
-                bag.gameObject.SetActive(false);
-            });
-        }
-
-        //가방에 있는 카드만 동적생성
-        for (int i = 0; i < GameMgr.cardBuffer.Count; i++)
-        {
-            foreach(KeyValuePair<int, int> temp in GameMgr.cardInBagList)
-            {
-                if (GameMgr.cardBuffer[i].cardNum == temp.Value)
-                {
-                    GameObject card = Instantiate(cardPrefab);
-                    card.transform.SetParent(cardBagContent.transform);
-                    CardMgr cardInfo = card.GetComponent<CardMgr>();
-                    cardInfo.SetCard(GameMgr.cardBuffer[i], temp.Key);
-                }
-            }
-        }
-
-        //if(test != null)
-        //{
-        //    test.onClick.AddListener(() =>
-        //    {
-        //        Vector3 testVec;
-        //        Quaternion testQuat;
-        //        map.transform.GetPositionAndRotation(out testVec, out testQuat);
-        //        Debug.Log(testVec);
-        //        map.transform.position = testVec + new Vector3(-250, 0, 0);
-        //    });
-        //}
 
         //맵을 다음 스테이지 위치로
         map.transform.position = new Vector3(((GameMgr.stage - 1) * -250), 720, 0);

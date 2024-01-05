@@ -91,14 +91,18 @@ public class StageNode : MonoBehaviour
         if(stageType == StageType.battle)
         {
             SceneManager.LoadScene("BattleScene");
+            SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
+
         }
         else if(stageType == StageType.store)
         {
             SceneManager.LoadScene("StoreScene");
+            SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
         }
         else if (stageType == StageType.rest)
         {
             SceneManager.LoadScene("RestScene");
+            SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
         }
     }
 }

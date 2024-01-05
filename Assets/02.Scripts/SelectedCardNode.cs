@@ -98,7 +98,7 @@ public class SelectedCardNode : MonoBehaviour
             battleMgr.RefreshSelectedCardArea(); //선택된카드 화면 새로고침
 
             //가방안의 카드 중 해당하는 카드 찾아서 isSelected = false 해주기
-            GameObject bagObj = GameObject.Find("Canvas").transform.Find("Bag").gameObject;
+            GameObject bagObj = GameObject.Find("UICanvas").transform.Find("Bag").gameObject;
 
             CardMgr[] childList = bagObj.GetComponentsInChildren<CardMgr>();
             for (int i = 1; i < childList.Length; i++)

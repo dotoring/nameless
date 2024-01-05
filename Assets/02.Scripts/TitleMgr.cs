@@ -21,7 +21,7 @@ public class TitleMgr : MonoBehaviour
             newGameBtn.onClick.AddListener(() =>
             {
                 SceneManager.LoadScene("MapScene");
-                //SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
+                SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
             });
         }
     }

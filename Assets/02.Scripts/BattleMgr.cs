@@ -18,11 +18,9 @@ public enum Phase
 
 public class BattleMgr : MonoBehaviour
 {
-    public Button bagBtn = null;
-    public GameObject bag = null;
-    public Button bagCloseBtn = null;
+    public StatusUIMgr statusUIMgr = null;
+    GameObject bagBtnObj = null;
 
-    public GameObject cardBagContent = null;
     public GameObject cardPrefab = null;
     public GameObject selectedCardPrefab = null;
 
@@ -70,11 +68,11 @@ public class BattleMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameMgr.RefreshHP();
-        GameMgr.RefreshSP();
-        GameMgr.RefreshGold();
-        GameMgr.RefreshItems();
         GameMgr.tempSp = GameMgr.curSp;
+
+        GameObject statusObj = GameObject.Find("StatusUIMgr");
+        statusUIMgr = statusObj.GetComponent<StatusUIMgr>();
+        bagBtnObj = GameObject.Find("BagBtn");
 
         //플레이어 생성
         GameObject playerObj = Instantiate(playerPrefab);
@@ -86,21 +84,6 @@ public class BattleMgr : MonoBehaviour
         //페이즈 설정
         phase = Phase.cardSelect;   
 
-        //가방에 있는 카드만 동적생성
-        for (int i = 0; i < GameMgr.cardBuffer.Count; i++)
-        {
-            foreach (KeyValuePair<int, int> temp in GameMgr.cardInBagList)
-            {
-                if (GameMgr.cardBuffer[i].cardNum == temp.Value)
-                {
-                    GameObject card = Instantiate(cardPrefab);
-                    card.transform.SetParent(cardBagContent.transform);
-                    CardMgr cardInfo = card.GetComponent<CardMgr>();
-                    cardInfo.SetCard(GameMgr.cardBuffer[i], temp.Key);
-                }
-            }
-        }
-
         //선택된 카드 목록 초기화
         selectedCardOrder.Clear();
         selectedCardDic.Clear();
@@ -110,22 +93,6 @@ public class BattleMgr : MonoBehaviour
         PopNewCards();
 
         //===============버튼들 설정================
-        if (bagBtn != null)
-        {
-            bagBtn.onClick.AddListener(() =>
-            {
-                bag.gameObject.SetActive(true);
-            });
-        }
-
-        if(bagCloseBtn != null)
-        {
-            bagCloseBtn.onClick.AddListener(() =>
-            {
-                bag.gameObject.SetActive(false);
-            });
-        }
-
         if (continueBtn != null)
         {
             continueBtn.onClick.AddListener(continueBtnClick);
@@ -138,6 +105,7 @@ public class BattleMgr : MonoBehaviour
                 GameMgr.curSp = GameMgr.maxSp;
                 GameMgr.stage++;
                 SceneManager.LoadScene("MapScene");
+                SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
             });
         }
 
@@ -147,6 +115,7 @@ public class BattleMgr : MonoBehaviour
             {
                 GameMgr.ResetGame();
                 SceneManager.LoadScene("MapScene");
+                SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
             });
         }
 
@@ -156,6 +125,7 @@ public class BattleMgr : MonoBehaviour
             quitBtn.onClick.AddListener(() =>
             {
                 SceneManager.LoadScene("MapScene");
+                SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
             });
         }
 
@@ -174,13 +144,10 @@ public class BattleMgr : MonoBehaviour
     {
         if(phase == Phase.action)
         {
-            bag.gameObject.SetActive(false);
-            bagBtn.gameObject.SetActive(false);
             continueBtn.gameObject.SetActive(false);
         }
         else if(phase == Phase.cardSelect)
         {
-            bagBtn.gameObject.SetActive(true);
             continueBtn.gameObject.SetActive(true);
         }
         else if(phase == Phase.battleEndNewCard)
@@ -391,11 +358,26 @@ public class BattleMgr : MonoBehaviour
         ClearSelectedCard();
         GameMgr.tempSp = GameMgr.curSp;
         phase = Phase.cardSelect;   //카드 선택 페이즈로 넘어가기
+
+        //가방버튼 활성화
+        if (bagBtnObj != null)
+        {
+            bagBtnObj.gameObject.SetActive(true);
+        }
     }
 
     void continueBtnClick() //계속 버튼 클릭 시
     {
         phase = Phase.action;
+        GameObject bagObj = GameObject.Find("Bag");
+        if (bagObj != null)
+        {
+            bagObj.gameObject.SetActive(false);
+        }
+        if (bagBtnObj != null)
+        {
+            bagBtnObj.gameObject.SetActive(false);
+        }
         StartCoroutine(ActionPhase());
     }
 
@@ -443,19 +425,22 @@ public class BattleMgr : MonoBehaviour
     {
         selectedCardOrder.Clear();  //순서 리스트 초기화
         selectedCardDic.Clear();    //딕셔너리 초기화
+
+        statusUIMgr.ClearIsSelected();
+
         //가방 안의 카드들 isSelected 초기화
-        Transform[] child = cardBagContent.GetComponentsInChildren<Transform>();
-        if(child != null)
-        {
-            for (int i = 1; i < child.Length; i++)
-            {
-                CardMgr cardMgr = child[i].gameObject.GetComponent<CardMgr>();
-                if(cardMgr != null)
-                {
-                    cardMgr.isSelected = false;
-                }
-            }
-        }
+        //Transform[] child = cardBagContent.GetComponentsInChildren<Transform>();
+        //if(child != null)
+        //{
+        //    for (int i = 1; i < child.Length; i++)
+        //    {
+        //        CardMgr cardMgr = child[i].gameObject.GetComponent<CardMgr>();
+        //        if(cardMgr != null)
+        //        {
+        //            cardMgr.isSelected = false;
+        //        }
+        //    }
+        //}
     }
 
     void DrawRandomNewCard()
