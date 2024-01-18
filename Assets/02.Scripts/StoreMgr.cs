@@ -22,11 +22,13 @@ public class StoreMgr : MonoBehaviour
     {
         StoreSetup();
 
+        StatusUIMgr.NextStage();
+        GlobalValue.SaveGameData();
+
         if (storeQuitBtn != null)
         {
             storeQuitBtn.onClick.AddListener(() =>
             {
-                GameMgr.stage++;
                 SceneManager.LoadScene("MapScene");
                 SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
             });

@@ -111,17 +111,17 @@ public class SelectedCardNode : MonoBehaviour
 
             if (tag == "UtilCard")
             {
-                GameMgr.tempSp -= cardSP;
-                if (GameMgr.tempSp <= 0)
+                StatusUIMgr.tempSp -= cardSP;
+                if (StatusUIMgr.tempSp <= 0)
                 {
                     battleMgr.ClearSelectedCard();
                     battleMgr.RefreshSelectedCardArea(); //선택된카드 화면 새로고침
-                    GameMgr.tempSp = GameMgr.curSp;
+                    StatusUIMgr.SetTempSP();
                 }
             }
             else
             {
-                GameMgr.tempSp += cardSP;
+                StatusUIMgr.tempSp += cardSP;
             }
         }
     }

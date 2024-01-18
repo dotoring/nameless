@@ -37,29 +37,24 @@ public class RestMgr : MonoBehaviour
 
     void RestBtnClick()
     {
-        GameMgr.curHp += 30;
-        if(GameMgr.curHp >= GameMgr.maxHp)
-        {
-            GameMgr.curHp = GameMgr.maxHp;
-        }
-        GameMgr.stage++;
+        StatusUIMgr.Heal(30);
+        GlobalValue.stage++;
         SceneManager.LoadScene("MapScene");
         SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
     }
 
     void HealthBtnClick()
     {
-        GameMgr.maxHp += 10;
-        GameMgr.stage++;
+        StatusUIMgr.IncreaseHP(10);
+        GlobalValue.stage++;
         SceneManager.LoadScene("MapScene");
         SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
     }
 
     void MeditBtnClick()
     {
-        GameMgr.maxSp += 10;
-        GameMgr.curSp = GameMgr.maxSp;
-        GameMgr.stage++;
+        StatusUIMgr.IncreaseSP(10);
+        GlobalValue.stage++;
         SceneManager.LoadScene("MapScene");
         SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
     }

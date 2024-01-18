@@ -40,7 +40,6 @@ public class MonsterNode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(monster.name);
         monster.monHPText = monHPText;
         monster.monDmgText = monDmgText;
         monster.RefreshMonStat();
@@ -103,15 +102,6 @@ public class MonsterNode : MonoBehaviour
 
     IEnumerator MonAttAnim(bool isEnemyOnTile)
     {
-        if(!name.Contains("BossKingSlime"))
-        {
-            if (name.Contains("LightningSlime"))
-            {
-                yield return new WaitForSeconds(0.1f);
-            }
-            yield return new WaitForSeconds(0.5f);
-        }
-
         animator.SetTrigger("Attack");
         yield break;
     }

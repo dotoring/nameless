@@ -58,57 +58,33 @@ public class ItemNode : MonoBehaviour
         {
             case 0:
                 Debug.Log("체력포션(소)");
-                GameMgr.curHp += 20;
-                if(GameMgr.curHp > GameMgr.maxHp)
-                {
-                    GameMgr.curHp = GameMgr.maxHp;
-                }
-                GameMgr.RefreshHP();
+                StatusUIMgr.Heal(20);
                 Destroy(gameObject);
-                GameMgr.itemList.Remove(itemNum);
+                StatusUIMgr.RemoveItem(itemNum);
                 break;
             case 1:
                 Debug.Log("기력포션");
-                GameMgr.curSp += 20;
-                if(GameMgr.curSp > GameMgr.maxSp)
-                {
-                    GameMgr.curSp = GameMgr.maxSp;
-                }
-                GameMgr.RefreshSP();
+                StatusUIMgr.SPRecovery(20);
                 Destroy(gameObject);
-                GameMgr.itemList.Remove(itemNum);
+                StatusUIMgr.RemoveItem(itemNum);
                 break;
             case 2:
                 Debug.Log("체력포션(중)");
-                GameMgr.curHp += 50;
-                if (GameMgr.curHp > GameMgr.maxHp)
-                {
-                    GameMgr.curHp = GameMgr.maxHp;
-                }
-                GameMgr.RefreshHP();
+                StatusUIMgr.Heal(50);
                 Destroy(gameObject);
-                GameMgr.itemList.Remove(itemNum);
+                StatusUIMgr.RemoveItem(itemNum);
                 break;
             case 3:
                 Debug.Log("붕대");
-                if(GameMgr.curHp < GameMgr.maxHp * 0.8f)
-                {
-                    GameMgr.curHp = GameMgr.maxHp * 0.8f;
-                }
-                GameMgr.RefreshHP();
+                StatusUIMgr.PercentHeal(0.8f);
                 Destroy(gameObject);
-                GameMgr.itemList.Remove(itemNum);
+                StatusUIMgr.RemoveItem(itemNum);
                 break;
             case 4:
                 Debug.Log("체력포션(대)");
-                GameMgr.curHp += 80;
-                if (GameMgr.curHp > GameMgr.maxHp)
-                {
-                    GameMgr.curHp = GameMgr.maxHp;
-                }
-                GameMgr.RefreshHP();
+                StatusUIMgr.Heal(80);
                 Destroy(gameObject);
-                GameMgr.itemList.Remove(itemNum);
+                StatusUIMgr.RemoveItem(itemNum);
                 break;
         }
     }

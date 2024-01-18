@@ -19,10 +19,12 @@ public class MapMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GlobalValue.SaveGameData();
+
         BattleMgr.phase = Phase.map;
 
         //맵을 다음 스테이지 위치로
-        map.transform.position = new Vector3(((GameMgr.stage - 1) * -250), 720, 0);
+        map.transform.position = new Vector3(((GlobalValue.stage - 1) * -250), 720, 0);
     }
 
     // Update is called once per frame

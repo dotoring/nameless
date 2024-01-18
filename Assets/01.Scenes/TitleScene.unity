@@ -1014,7 +1014,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newGameBtn: {fileID: 602002250}
-  continueGameBtn: {fileID: 0}
+  continueGameBtn: {fileID: 1118359848}
   quitBtn: {fileID: 626091757}
 --- !u!4 &1913717453
 Transform:

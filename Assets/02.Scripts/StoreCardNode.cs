@@ -52,19 +52,18 @@ public class StoreCardNode : MonoBehaviour
 
     void BuyCard()  //카드 구매 함수
     {
-        if (GameMgr.curGold >= cardCost)    //구입 가능한 골드일 경우
+        if (StatusUIMgr.UseGold(cardCost))    //구입 가능한 골드일 경우
         {
-            //골드 차감 후 가방에 넣기
-            GameMgr.curGold -= cardCost;
-            GameMgr.RefreshGold();
-            GameMgr.cardInBagList.Add(GameMgr.cardInBagList.Count, cardNum);
+            //골드 차감 후 보유카드리스트에 넣기
+            StatusUIMgr.AddCard(cardNum);
 
+            //가방안에 카드 오브젝트 생성
             GameObject obj = GameObject.Find("StatusUIMgr");
             StatusUIMgr statusUIMgr = obj.GetComponent<StatusUIMgr>();
             GameObject card = Instantiate(statusUIMgr.cardPrefab);
             card.transform.SetParent(statusUIMgr.cardBagContent.transform);
             CardMgr cardInfo = card.GetComponent<CardMgr>();
-            cardInfo.SetCard(cardTemp, GameMgr.cardInBagList.Count);
+            cardInfo.SetCard(cardTemp, GlobalValue.ownCards.Count);
 
             //구매한 카드 구매불가 표시
             cardBuyBtn.gameObject.SetActive(false);

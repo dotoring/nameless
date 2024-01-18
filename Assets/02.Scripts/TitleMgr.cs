@@ -20,10 +20,36 @@ public class TitleMgr : MonoBehaviour
         {
             newGameBtn.onClick.AddListener(() =>
             {
+                GlobalValue.NewGameData();
+                SceneManager.LoadScene("MapScene");
+                SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
+
+            });
+        }
+
+        if(continueGameBtn != null)
+        {
+            continueGameBtn.onClick.AddListener(() =>
+            {
+                GlobalValue.LoadGameData();
                 SceneManager.LoadScene("MapScene");
                 SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
             });
         }
+
+        if (quitBtn != null)
+        {
+            quitBtn.onClick.AddListener(() =>
+            {
+                Application.Quit();
+            });
+        }
+
+        if (PlayerPrefs.GetInt("Stage", 0) == 0)
+        {
+            continueGameBtn.interactable = false;
+        }
+
     }
 
     // Update is called once per frame

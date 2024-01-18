@@ -68,7 +68,6 @@ public class MonsterCtrl : MonoBehaviour
 
         if (fieldMgr != null)   //몬스터 첫 위치 지정
         {
-            Debug.Log(monPosX + " " + monPosY);
             gameObject.transform.position = fieldMgr.field[monPosX, monPosY].transform.position;
             fieldMgr.ObjOnTile(monPosX, monPosY, gameObject);
         }

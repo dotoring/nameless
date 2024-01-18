@@ -15,7 +15,7 @@ public class Card
     public int utileType;
     public Sprite cardImage;
     public int cardCost;
-    
+    public string cardInfo;
 }
 
 [System.Serializable]

@@ -68,7 +68,7 @@ public class BattleMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameMgr.tempSp = GameMgr.curSp;
+        StatusUIMgr.SetTempSP();
 
         GameObject statusObj = GameObject.Find("StatusUIMgr");
         statusUIMgr = statusObj.GetComponent<StatusUIMgr>();
@@ -102,8 +102,8 @@ public class BattleMgr : MonoBehaviour
         {
             nextBtn.onClick.AddListener(() =>
             {
-                GameMgr.curSp = GameMgr.maxSp;
-                GameMgr.stage++;
+                StatusUIMgr.FillSP();
+                StatusUIMgr.NextStage();
                 SceneManager.LoadScene("MapScene");
                 SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
             });
@@ -113,7 +113,7 @@ public class BattleMgr : MonoBehaviour
         {
             newGameBtn.onClick.AddListener(() =>
             {
-                GameMgr.ResetGame();
+                GlobalValue.NewGameData();
                 SceneManager.LoadScene("MapScene");
                 SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
             });
@@ -124,8 +124,7 @@ public class BattleMgr : MonoBehaviour
         {
             quitBtn.onClick.AddListener(() =>
             {
-                SceneManager.LoadScene("MapScene");
-                SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
+                SceneManager.LoadScene("TitleScene");
             });
         }
 
@@ -152,10 +151,7 @@ public class BattleMgr : MonoBehaviour
         }
         else if(phase == Phase.battleEndNewCard)
         {
-            if (GameMgr.stage == 9) //마지막 스테이지라면 엔딩씬으로 이동
-            {
-                SceneManager.LoadScene("EndingScene");
-            }
+
             resultPanel.gameObject.SetActive(true);
         }
         else if(phase == Phase.battleEndResult)
@@ -165,9 +161,8 @@ public class BattleMgr : MonoBehaviour
             if(!isCalcDone)
             {
                 earnGold = GoldCalc();
-                GameMgr.curGold += earnGold;
+                StatusUIMgr.EarnGold(earnGold);
                 getGoldText.text = "획득골드 : " + earnGold;
-                GameMgr.RefreshGold();
                 isCalcDone = true;
             }
         }
@@ -213,8 +208,7 @@ public class BattleMgr : MonoBehaviour
             //----------플레이어
             if (selectedCardOrder[i].tag == "MoveCard")
             {
-                GameMgr.curSp -= cardMgr.cardSP;
-                GameMgr.RefreshSP();
+                StatusUIMgr.UseSP(cardMgr.cardSP);
                 //선택된 카드오브젝트들 하나씩 지우기
                 Transform[] childList = selectedCardArea.GetComponentsInChildren<Transform>();
                 Destroy(childList[1].gameObject);
@@ -246,10 +240,10 @@ public class BattleMgr : MonoBehaviour
                         break;
                     case 1:
                         //sp 회복
-                        GameMgr.SPUp(cardMgr.cardSP);
+                        StatusUIMgr.SPRecovery(cardMgr.cardSP);
                         break;
                     case 2:
-                        GameMgr.Heal(20);
+                        StatusUIMgr.Heal(20);
                         //hp 회복
                         break;
                     case 3:
@@ -291,8 +285,7 @@ public class BattleMgr : MonoBehaviour
             //----------플레이어
             if (selectedCardOrder[i].tag == "AttCard")
             {
-                GameMgr.curSp -= cardMgr.cardSP;
-                GameMgr.RefreshSP();
+                StatusUIMgr.UseSP(cardMgr.cardSP);
                 //선택된 카드오브젝트들 하나씩 지우기
                 Transform[] childList = selectedCardArea.GetComponentsInChildren<Transform>();
                 Destroy(childList[1].gameObject);
@@ -302,14 +295,14 @@ public class BattleMgr : MonoBehaviour
                     playerCtrl.AttackAreaOnOff(cardMgr.cardCoords[j].x, cardMgr.cardCoords[j].y, true);
                 }
 
-                yield return new WaitForSeconds(1.0f);  //공격표시 후 1초 쉬기
+                yield return new WaitForSeconds(0.5f);  //공격표시 후 1초 쉬기
 
                 for (int j = 0; j < cardMgr.cardCoords.Count; j++)  //모든 공격 위치 표시 끄고 공격하기
                 {
                     playerCtrl.PlayerAttack(cardMgr.cardCoords[j].x, cardMgr.cardCoords[j].y, cardMgr.cardDmg);
                     playerCtrl.AttackAreaOnOff(cardMgr.cardCoords[j].x, cardMgr.cardCoords[j].y, false);
                 }
-                yield return new WaitForSeconds(1.0f);  //플레이어 행동 후 1초 쉬기
+                yield return new WaitForSeconds(0.8f);  //플레이어 행동 후 1초 쉬기
             }
 
             //----------몬스터
@@ -323,9 +316,9 @@ public class BattleMgr : MonoBehaviour
                     {
                         monNode.monster.monAttackAI();
                         monNode.monster.MonsterActionArea();
-                        yield return new WaitForSeconds(1.0f);  //몬스터 행동 표시 후 1초 쉬기
+                        yield return new WaitForSeconds(0.5f);  //몬스터 행동 표시 후 1초 쉬기
                         monNode.monster.MonsterAction();
-                        yield return new WaitForSeconds(1.0f);  //몬스터 행동 후 1초 쉬기
+                        yield return new WaitForSeconds(0.8f);  //몬스터 행동 후 1초 쉬기
                     }
                 }
             }
@@ -335,6 +328,11 @@ public class BattleMgr : MonoBehaviour
             //=====================4.스테이지 판정=====================
             if (monsters.Count <= 0) //몬스터가 전멸했을 경우
             {
+                if (GlobalValue.stage == 9) //마지막 스테이지라면 엔딩씬으로 이동
+                {
+                    SceneManager.LoadScene("EndingScene");
+                }
+
                 phase = Phase.battleEndNewCard; //전투 결과 페이즈로 넘어가기
 
                 //-------선택된 카드들 전부 지워주기
@@ -356,7 +354,7 @@ public class BattleMgr : MonoBehaviour
         //------선택된 카드들 초기화해주기
 
         ClearSelectedCard();
-        GameMgr.tempSp = GameMgr.curSp;
+        StatusUIMgr.SetTempSP();
         phase = Phase.cardSelect;   //카드 선택 페이즈로 넘어가기
 
         //가방버튼 활성화
@@ -471,7 +469,7 @@ public class BattleMgr : MonoBehaviour
                     GameObject card = Instantiate(cardPrefab);
                     card.transform.SetParent(newCardList.transform, false);
                     CardMgr cardInfo = card.GetComponent<CardMgr>();
-                    cardInfo.SetCard(GameMgr.cardBuffer[j], GameMgr.cardInBagList.Count);
+                    cardInfo.SetCard(GameMgr.cardBuffer[j], GlobalValue.ownCards.Count);
                     break;
                 }
             }
@@ -490,7 +488,7 @@ public class BattleMgr : MonoBehaviour
 
     void MonsterSpawning()
     {
-        if(GameMgr.stage == 1) //첫 스테이지
+        if(GlobalValue.stage == 1) //첫 스테이지
         {
             GameObject mon = Instantiate(monsterPrefabs[0]);
             monsters.Add(mon);
@@ -500,7 +498,41 @@ public class BattleMgr : MonoBehaviour
             monNode.monster.monPosY = 2;
             monNode.monster.MonsterSpawnPoint(monsters[0]);
         }
-        else if(GameMgr.stage == 9) //보스 스테이지
+        else if (GlobalValue.stage <= 3) //두마리 스폰
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                int monster = Random.Range(0, 5);
+                GameObject mon = Instantiate(monsterPrefabs[monster]);
+                monsters.Add(mon);
+            }
+
+            for (int i = 0; i < monsters.Count; i++)
+            {
+                MonsterNode monNode = monsters[i].GetComponent<MonsterNode>();
+                monNode.monster.monPosX = 4 + (i % 2);
+                monNode.monster.monPosY = i;
+                monNode.monster.MonsterSpawnPoint(monsters[i]);
+            }
+        }
+        else if (GlobalValue.stage <= 6) //세마리 스폰
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                int monster = Random.Range(0, 5);
+                GameObject mon = Instantiate(monsterPrefabs[monster]);
+                monsters.Add(mon);
+            }
+
+            for (int i = 0; i < monsters.Count; i++)
+            {
+                MonsterNode monNode = monsters[i].GetComponent<MonsterNode>();
+                monNode.monster.monPosX = 4 + (i % 2);
+                monNode.monster.monPosY = i;
+                monNode.monster.MonsterSpawnPoint(monsters[i]);
+            }
+        }
+        else if(GlobalValue.stage == 9) //보스 스테이지
         {
             GameObject mon = Instantiate(monsterPrefabs[5]);
             monsters.Add(mon);
@@ -512,9 +544,7 @@ public class BattleMgr : MonoBehaviour
         }
         else
         {
-            totalMonsterCount = Random.Range(2, 5);
-
-            for (int i = 0; i < totalMonsterCount; i++)
+            for (int i = 0; i < 4; i++)
             {
                 int monster = Random.Range(0, 5);
                 GameObject mon = Instantiate(monsterPrefabs[monster]);

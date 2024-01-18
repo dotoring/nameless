@@ -21,6 +21,7 @@ public class CardMgr : MonoBehaviour
     public Text cardDmgTxt;
     public int cardSP;
     public Text cardSPTxt;
+    public Text cardInfoTxt;
     public List<Coords> cardCoords;
     public CardType cardType;
     public int utilType;
@@ -28,7 +29,6 @@ public class CardMgr : MonoBehaviour
 
     public Image selectedEffect;
     Image[] images;
-    public Card cardInfo;
 
     Button cardBtn;
 
@@ -59,7 +59,7 @@ public class CardMgr : MonoBehaviour
 
         if(BattleMgr.phase == Phase.cardSelect)
         {
-            if (GameMgr.tempSp < cardSP && !isSelected && tag != "UtilCard")
+            if (StatusUIMgr.tempSp < cardSP && !isSelected && tag != "UtilCard")
             {
                 foreach (Image image in images)
                 {
@@ -78,9 +78,9 @@ public class CardMgr : MonoBehaviour
 
     public void SetCard(Card card, int key)
     {
-        cardKey = key;
+        cardKey = key; //해당 카드의 고유 값(중복 x)
         cardType = card.cardType;
-        cardNum = card.cardNum;
+        cardNum = card.cardNum; //카드 종류 구별용 번호(중복 o)
         cardName.text = card.cardName;
         cardDmg = card.cardDmg;
         cardDmgTxt.text = card.cardDmg.ToString();
@@ -88,6 +88,7 @@ public class CardMgr : MonoBehaviour
         cardSPTxt.text = card.cardSP.ToString();
         cardArea.sprite = card.cardImage;
         utilType = card.utileType;
+        cardInfoTxt.text = card.cardInfo;
 
         if(card.coords.Length != 0)
         {
@@ -110,8 +111,6 @@ public class CardMgr : MonoBehaviour
             gameObject.tag = "UtilCard";
             cardSPTxt.text = "+" + card.cardSP.ToString();
         }
-
-        cardInfo = card;
     }
 
     void CardClick()
@@ -124,7 +123,7 @@ public class CardMgr : MonoBehaviour
 
             if (BattleMgr.selectedCardOrder.Count <= 2 && isSelected == false)    //3개 이상 선택x, 선택되지 않은 카드를 눌렀을 때
             {
-                if (GameMgr.tempSp >= cardSP || this.tag == "UtilCard")    //카드 사용할 SP가 있을 때
+                if (StatusUIMgr.tempSp >= cardSP || this.tag == "UtilCard")    //카드 사용할 SP가 있을 때
                 {
                     BattleMgr.selectedCardOrder.Add(gameObject); //선택된 카드 순서 리스트에 추가
                     BattleMgr.selectedCardDic.Add(cardKey, cardNum); //선택된 카드 딕셔너리에 추가
@@ -133,13 +132,13 @@ public class CardMgr : MonoBehaviour
 
                     if(this.tag != "UtilCard")
                     {
-                        GameMgr.tempSp -= cardSP;
+                        StatusUIMgr.tempSp -= cardSP;
                     }
                     else
                     {
-                        GameMgr.tempSp += cardSP;
+                        StatusUIMgr.tempSp += cardSP;
                     }
-                    GameMgr.RefreshSP();
+                    StatusUIMgr.RefreshSP();
                 }
             }
             else if (isSelected == true) //선택된 카드를 눌렀을 때(선택 취소)
@@ -152,16 +151,16 @@ public class CardMgr : MonoBehaviour
 
                 if (this.tag != "UtilCard")
                 {
-                    GameMgr.tempSp += cardSP; //사용했던 SP 반환
+                    StatusUIMgr.tempSp += cardSP; //사용했던 SP 반환
                 }
                 else
                 {
-                    GameMgr.tempSp -= cardSP;
-                    if(GameMgr.tempSp <= 0)
+                    StatusUIMgr.tempSp -= cardSP;
+                    if(StatusUIMgr.tempSp <= 0)
                     {
                         battleMgr.ClearSelectedCard();
                         battleMgr.RefreshSelectedCardArea(); //선택된카드 화면 새로고침
-                        GameMgr.tempSp = GameMgr.curSp;
+                        StatusUIMgr.SetTempSP();
                     }
                 }
             }
@@ -169,7 +168,7 @@ public class CardMgr : MonoBehaviour
         //---------------------새 카드 선택 단계에서 카드 클릭 시-----------------------
         else if (BattleMgr.phase == Phase.battleEndNewCard)  
         {
-            GameMgr.cardInBagList.Add(GameMgr.cardInBagList.Count, cardNum); //가방에 이 카드 추가
+            StatusUIMgr.AddCard(cardNum); //가방에 이 카드 추가
             BattleMgr.phase = Phase.battleEndResult;    //결과창 단계로 넘어가기
         }
         //--------------------맵에서 카드 클릭 시-----------------------------

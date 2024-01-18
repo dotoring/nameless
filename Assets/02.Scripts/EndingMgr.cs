@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class EndingMgr : MonoBehaviour
 {
     public Button titleBtn = null;
+    public Button restartBtn = null;
 
     // Start is called before the first frame update
     void Start()
@@ -15,8 +16,18 @@ public class EndingMgr : MonoBehaviour
         {
             titleBtn.onClick.AddListener(() =>
             {
-                GameMgr.ResetGame();
+                PlayerPrefs.DeleteAll();
+                SceneManager.LoadScene("TitleScene");
+            });
+        }
+
+        if (restartBtn != null)
+        {
+            restartBtn.onClick.AddListener(() =>
+            {
+                GlobalValue.NewGameData();
                 SceneManager.LoadScene("MapScene");
+                SceneManager.LoadScene("StatusUI", LoadSceneMode.Additive);
             });
         }
     }

@@ -21,7 +21,7 @@ public class StageNode : MonoBehaviour
     {
         Button button = GetComponent<Button>();
 
-        switch(GameMgr.stage)
+        switch(GlobalValue.stage)
         {
             case 1:
                 if(this.tag == "Stage1")

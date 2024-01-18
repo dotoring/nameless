@@ -138,8 +138,8 @@ public class PlayerCtrl : MonoBehaviour
                 monster.MonDamage(dmg);
                 if(monster.reflect > 0)
                 {
-                    GameMgr.curHp -= monster.reflect;
-                    GameMgr.RefreshHP();
+                    StatusUIMgr.Damage(monster.reflect);
+                    StatusUIMgr.RefreshHP();
                 }
             }
         }
@@ -165,13 +165,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             dmg = 0;
         }
-        GameMgr.curHp -= dmg;
-        GameMgr.RefreshHP();
-        if (GameMgr.curHp <= 0)
-        {
-            BattleMgr.phase = Phase.gameOver;
-            Debug.Log("game over");
-        }
+        StatusUIMgr.Damage(dmg);
     }
 
     public Coords GetPlayerCoords() //플레이어 좌표 가져오는 함수
